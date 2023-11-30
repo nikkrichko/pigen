@@ -1,0 +1,442 @@
+{
+    "Classic_Disney": {
+        "description": "Timeless, round and friendly characters with bright, primary colors.",
+        "palette": "Bright red, yellow, blue, and white."
+    },
+    "Anime": {
+        "description": "Sharp lines, exaggerated eyes, and colorful hair; characters often have big expressions.",
+        "palette": "Varied, but often includes vibrant hues."
+    },
+    "Watercolor": {
+        "description": "Soft, dreamy characters with a watercolor texture, giving a gentle and artistic feel.",
+        "palette": "Pastel shades and soft gradients."
+    },
+    "Retro_80s": {
+        "description": "Bold outlines, neon colors, and geometric shapes reminiscent of '80s pop culture.",
+        "palette": "Neon pink, cyan, purple, and electric blue."
+    },
+    "Pixel_Art": {
+        "description": "Pixelated characters with a nostalgic video game look, often in a low-resolution style.",
+        "palette": "Limited color palette based on pixel art."
+    },
+    "Minimalist": {
+        "description": "Simplistic, clean lines with minimal details, focusing on character expressions and silhouettes.",
+        "palette": "Monochromatic or limited color schemes."
+    },
+    "Steampunk": {
+        "description": "Characters with animal heads and Victorian-era clothing, featuring intricate mechanical accessories.",
+        "palette": "Earthy tones with brass and copper accents."
+    },
+    "Manga": {
+        "description": "Large, expressive eyes and dynamic poses, characteristic of Japanese manga and anime.",
+        "palette": "Varied, but often includes bold colors."
+    },
+    "Cartoon_Noir": {
+        "description": "A black and white style with heavy shadows and dramatic lighting, creating a film noir atmosphere.",
+        "palette": "Grayscale with high contrast."
+    },
+    "Pastel": {
+        "description": "Soft and gentle characters with a pastel color palette, evoking a sense of sweetness and innocence.",
+        "palette": "Pastel pinks, blues, and greens."
+    },
+    "Tribal": {
+        "description": "Characters with tribal-inspired patterns, tattoos, and accessories, giving them a cultural and unique look.",
+        "palette": "Earthy tones and tribal motifs."
+    },
+    "SciFi": {
+        "description": "Futuristic animal characters with high-tech gadgets and cybernetic enhancements.",
+        "palette": "Metallic and neon colors."
+    },
+    "Pop_Art": {
+        "description": "Bold, vibrant colors and comic book-style rendering with the use of dots and bold outlines.",
+        "palette": "Primary colors with contrasting shades."
+    },
+    "Cartoon_Realism": {
+        "description": "Detailed and realistic animal features combined with cartoonish proportions and expressions.",
+        "palette": "Realistic animal colors with exaggerated expressions."
+    },
+    "Art_Deco": {
+        "description": "Characters with sleek, elegant designs reminiscent of the Art Deco era, featuring geometric patterns.",
+        "palette": "Gold, black, and muted jewel tones."
+    },
+    "Chibi": {
+        "description": "Super-deformed characters with oversized heads and cute, small bodies, emphasizing cuteness.",
+        "palette": "Bright and cheerful colors."
+    },
+    "Animal Parade": {
+        "description": "Whimsical characters in a parade setting, wearing colorful costumes and accessories.",
+        "palette": "Rainbow colors and playful combinations."
+    },
+    "Surreal": {
+        "description": "Dreamlike and surreal illustrations with distorted proportions and fantastical elements.",
+        "palette": "Dreamy and otherworldly color schemes."
+    },
+    "Cyberpunk": {
+        "description": "Futuristic, dystopian settings with animal characters featuring cyber enhancements and neon lights.",
+        "palette": "Dark and neon colors with a tech feel."
+    },
+    "Watermelon Slice": {
+        "description": "Characters with a watermelon-inspired color scheme of green and pink, giving a refreshing and fun vibe.",
+        "palette": "Green and pink with contrasting white."
+    },
+    "OldSovietCartoons": {
+        "description": "Characters with simple designs and muted colors, reflecting the style of classic Soviet-era animation.",
+        "palette": "Earthy tones with limited use of color."
+    },
+    "treasure_island": {
+        "description": "The overall visual style of the cartoon follows the classic hand-drawn animation techniques of Soviet-era animation. It features meticulous attention to detail, intricate line work, and a deliberate pacing that captures the storytelling nuances of the era.",
+        "palette": "A warm and earthy color palette with subdued tones. Rich browns, deep greens, and muted blues dominate the landscape, creating a nostalgic and rustic atmosphere. Occasional bursts of vibrant colors punctuate key scenes to enhance dramatic moments."
+    },
+  "Electricluminescent_Geometric_Lowpoly": {
+    "description": "Vibrant, electric colors in a geometric, low-poly style, featuring sharp angles and flat surfaces, creating a digital and modern aesthetic.",
+    "palette": "Bright neon colors, electric blues, hot pinks"
+  },
+  "Anime_Style_Watercolor": {
+    "description": "Fluid and expressive watercolor techniques combined with the distinctive features of anime characters - large, emotive eyes, and stylized hair.",
+    "palette": "Soft, diluted tones with pops of vibrant color"
+  },
+  "3D_Pixar_Style_Cartoon": {
+    "description": "Three-dimensional, rounded characters with exaggerated features, smooth textures, and a playful, wholesome atmosphere, reminiscent of Pixar animations.",
+    "palette": "Bright, primary colors with rich, warm tones"
+  },
+  "2D_Pixar_Style_Cartoon": {
+    "description": "Flat, two-dimensional style with Pixar-like character designs, featuring smooth lines, simple shapes, and a friendly, engaging vibe.",
+    "palette": "Vibrant and varied, with a focus on clarity and readability"
+  },
+  "Isometric_LEGO": {
+    "description": "Isometric perspective showcasing LEGO block constructions, with a focus on crisp, clean lines, and blocky, colorful aesthetics.",
+    "palette": "Bright primary colors, typical of LEGO sets"
+  },
+  "NeonLine_Drawing": {
+    "description": "Glowing neon lines creating abstract or recognizable shapes, often set against a dark background, emphasizing energy and motion.",
+    "palette": "Neon colors against dark backgrounds"
+  },
+  "Abstract_Art": {
+    "description": "Non-representational forms, using color, shape, and lines to create compositions independent from visual references in the world.",
+    "palette": "Varied, often bold and contrasting colors"
+  },
+  "Abstract_Geometry": {
+    "description": "Geometric shapes and forms arranged in abstract compositions, emphasizing structure and balance, often with a minimalistic approach.",
+    "palette": "Monochromatic or limited, with high contrast"
+  },
+  "ArtDeco": {
+    "description": "Elegant, symmetrical, streamlined designs with geometric shapes and lavish ornamentation, evoking a sense of luxury and modernity.",
+    "palette": "Gold, silver, metallics, and rich, deep colors"
+  },
+  "Art_Nouveau": {
+    "description": "Organic, flowing lines, natural forms, and intricate, stylized patterns, often featuring flowers, vines, and curvilinear shapes.",
+    "palette": "Soft, muted earth tones with occasional jewel tones"
+  },
+  "Bauhaus": {
+    "description": "Functional, geometric design focusing on simplicity and rationality, with an emphasis on typography and primary shapes.",
+    "palette": "Primary colors with black, white, and gray"
+  },
+  "Bokeh_Art": {
+    "description": "Artistic rendering of out-of-focus light points, creating a dreamy, blurred background with bright, circular light spots.",
+    "palette": "Soft, diffused pastels and bright light spots"
+  },
+  "Brutalism_design": {
+    "description": "Raw, blocky structures and rugged materials, focusing on minimalist, monolithic forms and a stark, imposing presence.",
+    "palette": "Monochromatic, emphasizing grays and earth tones"
+  },
+  "Byzantine-Art": {
+    "description": "Religious and imperial themes with flat, two-dimensional figures, gold backgrounds, and a hierarchical scale of figures.",
+    "palette": "Gold, deep blues, reds, and greens"
+  },
+  "Celtic_Art": {
+    "description": "Intricate knotwork and spirals, interlacing patterns, and stylized animal forms, often in circular or symmetrical compositions.",
+    "palette": "Earthy tones, greens, and metallic gold and silver"
+  },
+  "Charcoal": {
+    "description": "Textured, smudgy lines and shades, capturing light and shadow with a dynamic range from deep blacks to soft grays.",
+    "palette": "Black, white, and varying shades of gray"
+  },
+  "Chinese Brush Painting": {
+    "description": "Fluid, graceful brushstrokes capturing the essence of subjects, often nature-themed, with an emphasis on simplicity and elegance.",
+    "palette": "Black ink with subtle color accents"
+  },
+  "Chiptune_Visuals": {
+    "description": "Pixelated, retro-style visuals reminiscent of old video games, featuring blocky characters and simple, digital landscapes.",
+    "palette": "Bright, limited color range of early computer graphics"
+  },
+  "Concept_Art": {
+    "description": "Detailed, imaginative designs for characters, environments, and objects, often used in the pre-production stages of movies and games.",
+    "palette": "Varied, tailored to specific themes and moods"
+  },
+  "Constructivism": {
+    "description": "Bold, angular geometric shapes, often overlaid with political messages or slogans, emphasizing a sense of dynamism and purpose.",
+    "palette": "Red, black, and white, with occasional primary colors"
+  },
+  "Cyber_Folk": {
+    "description": "Fusion of traditional folk art elements with futuristic, cybernetic themes, blending organic patterns with digital motifs.",
+    "palette": "Earthy tones mixed with neon and metallic colors"
+  },
+  "Cybernetic_Art": {
+    "description": "Artificial and mechanical elements interwoven with organic forms, highlighting the integration of technology and biology.",
+    "palette": "Metallic tones, neon highlights, and contrasting darks"
+  },
+  "Cyberpunk": {
+    "description": "Futuristic, dystopian landscapes with neon lights, cybernetic enhancements, and a gritty, urban aesthetic.",
+    "palette": "Neon pinks, blues, and greens against dark backgrounds"
+  },
+  "Dadaism": {
+    "description": "Irrational, absurd, and often satirical artwork, utilizing collage, photomontage, and random elements to challenge traditional art concepts.",
+    "palette": "Varied, often incorporating found materials and photographs"
+  },
+  "Data_Art": {
+    "description": "Visualization of data in an artistic format, using graphs, charts, and abstract forms to represent and interpret information.",
+    "palette": "Dependent on data, often bright and varied"
+  },
+  "Digital_Collage": {
+    "description": "Combination of various digital images and elements, merged into a cohesive, often surreal or abstract composition.",
+    "palette": "Varied, depending on the source imagery"
+  },
+  "Digital_Cubism": {
+    "description": "Fragmented, geometric forms reminiscent of Cubism, reinterpreted in a digital medium, often with a modern, abstract twist.",
+    "palette": "Bold and contrasting, with sharp delineation"
+  },
+  "Digital_Impressionism": {
+    "description": "Digital brushstrokes mimicking the loose, expressive style of Impressionism, capturing light and movement in a vibrant way.",
+    "palette": "Bright, varied colors with visible brushstrokes"
+  },
+  "Digital_Painting": {
+    "description": "Artwork created using digital tools, often emulating traditional painting techniques, with a wide range of styles and subjects.",
+    "palette": "Varied, dependent on the artist's choice"
+  },
+  "Double_Exposure": {
+    "description": "Overlaying of two or more images, creating a composite that blends different scenes or elements into a single, cohesive image.",
+    "palette": "Muted, blending tones of the combined images"
+  },
+  "Dreamy_Fantasy": {
+    "description": "Whimsical, ethereal scenes often set in fantastical landscapes, featuring magical creatures and surreal, dream-like elements.",
+    "palette": "Soft pastels, luminous highlights, and mystical tones"
+  },
+  "Dystopian_Art": {
+    "description": "Grim, post-apocalyptic scenes depicting a troubled, futuristic world, often with themes of decay and desolation.",
+    "palette": "Dark, muted tones with occasional bright highlights"
+  },
+  "Etching": {
+    "description": "Fine lines and detailed shading achieved through the etching process, creating intricate designs or realistic scenes.",
+    "palette": "Black and white or monochromatic"
+  },
+  "Expressionism": {
+    "description": "Artwork expressing emotional experiences rather than depicting reality, characterized by bold colors and distorted forms.",
+    "palette": "Vibrant, exaggerated colors"
+  },
+  "Marinism": {
+    "description": "Artistic style focused on seascapes and maritime themes, featuring detailed depictions of sea life, ships, and coastal scenes.",
+    "palette": "Blues, greens, and natural oceanic tones"
+  },
+  "Fauvism": {
+    "description": "Wild, exaggerated colors and non-naturalistic, simplified forms, emphasizing painterly qualities and strong color over realistic values.",
+    "palette": "Bright, unnatural colors"
+  },
+  "Flat_Design": {
+    "description": "Minimalistic design style using simple elements, flat colors, and clean, open space, focusing on usability and clarity.",
+    "palette": "Solid, vivid colors with minimal shading"
+  },
+  "Fractal_Art": {
+        "description": "Characterized by intricate patterns repeating at different scales, creating complex and often symmetrical designs. Fractal Art typically features mathematical and abstract forms, with fluid, organic shapes and spiraling motifs.",
+        "palette": "Vibrant, multi-colored or monochromatic gradients"
+    },
+    "Futurism": {
+        "description": "Emphasizes speed, technology, and dynamic motion, often depicting modern urban scenes, machines, and vehicles. Futurism uses angular, geometric forms and lines that suggest movement and energy.",
+        "palette": "Bold primary colors, metallic tones"
+    },
+    "Glitch_Art": {
+        "description": "Mimics the aesthetic of digital or analog errors like corrupted data and pixelation. It often includes visual distortions such as color banding, fragmentation, and screen static effects.",
+        "palette": "High contrast, bright and discordant colors"
+    },
+    "Gothic_Art": {
+        "description": "Characterized by detailed, ornamental, and often religious themes, featuring arches, spires, and elongated figures. Gothic Art is known for its dramatic, mysterious, and sometimes macabre atmosphere.",
+        "palette": "Dark, muted tones with accents of gold and rich colors"
+    },
+    "Gouache": {
+        "description": "A painting style using gouache paint, known for its opaqueness and vibrant colors. It allows for both smooth gradients and crisp lines, often used in illustrations and designs.",
+        "palette": "Bright, saturated colors"
+    },
+    "Greco_Roman_Art": {
+        "description": "Combines elements of ancient Greek and Roman art, focusing on idealized human forms, mythology, and classical architecture. It features realistic anatomy, draped clothing, and often includes sculptures and frescoes.",
+        "palette": "Natural earthy tones, marble whites, and subtle hues"
+    },
+    "Impressionism": {
+        "description": "Captures the essence of a scene with loose, visible brushstrokes, emphasizing light and its changing qualities. Impressionism often depicts outdoor landscapes, everyday life, and movement.",
+        "palette": "Soft, pastel colors with vibrant highlights"
+    },
+    "Ink_Wash": {
+        "description": "A traditional East Asian painting style using black ink gradients, ranging from deep black to light gray, to create a harmonious, minimalist landscape or calligraphy.",
+        "palette": "Monochrome, shades of black and gray"
+    },
+    "Isometric_Art": {
+        "description": "Features a unique non-perspective 3D effect, with objects and environments drawn at a 30-degree angle. Isometric Art is often used in video games and graphic design, showcasing detailed, geometrically consistent scenes.",
+        "palette": "Varied, often bright and contrasting colors"
+    },
+    "Japanese_Ukiyoe": {
+        "description": "A historic Japanese art style depicting scenes of the floating world, such as landscapes, folk tales, and kabuki actors. Ukiyo-e is characterized by flat, outlined forms and a limited but vibrant color palette.",
+        "palette": "Vibrant, with predominant use of indigo, red, and green"
+    },
+    "Kinetic_Typography": {
+        "description": "An animation technique mixing motion and text to express ideas, featuring fluidly moving and evolving words in various fonts and sizes, often synchronized with music or speech.",
+        "palette": "Diverse, depending on the theme"
+    },
+    "Lithography": {
+        "description": "A printmaking technique that uses a stone or metal plate with oil-based ink to create finely detailed images. Lithography can replicate the texture and subtleties of a wide range of materials.",
+        "palette": "Depends on the inks used, often rich and varied"
+    },
+    "Low_Poly": {
+        "description": "A digital art style characterized by a minimalistic approach, using geometric shapes with a limited number of polygons. Low Poly art creates abstract, faceted interpretations of scenes or objects.",
+        "palette": "Bold, distinct colors to emphasize geometric shapes"
+    },
+    "Macabre_Art": {
+        "description": "Focuses on the darker aspects of life, such as death, decay, and the grotesque. Macabre Art is often haunting, unsettling, and rich in symbolism, with a gothic or surreal tone.",
+        "palette": "Dark, muted colors with occasional bursts of color"
+    },
+    "Magic_Realism": {
+        "description": "Blends realistic scenes with magical or fantastical elements, creating a world where the supernatural feels ordinary. Magic Realism art is detailed and lifelike, yet imbued with dreamlike or surreal qualities.",
+        "palette": "Realistic and natural, with surreal touches"
+    },
+    "Minimalism": {
+        "description": "Characterized by simplicity and focus on the essence of the subject, using minimal elements and colors. Minimalist art often features geometric forms, clean lines, and open spaces.",
+        "palette": "Limited, often monochromatic or with few colors"
+    },
+    "Modernism": {
+        "description": "An avant-garde movement breaking away from classical and traditional forms. Modernist art emphasizes new ideas and perspectives, often with abstract, experimental, or fragmented elements.",
+        "palette": "Varied, often bold and contrasting"
+    },
+    "Monogram": {
+        "description": "A motif made by overlapping or combining two or more letters or other graphemes to form a symbol. Monograms are often used as a logo or to identify a personal possession.",
+        "palette": "Depends on usage, often monochromatic or dual tones"
+    },
+    "Mosaic": {
+        "description": "An art form creating images with small pieces of colored glass, stone, or other materials, pieced together to form a pattern or picture. Mosaics are detailed, textured, and often have a tactile quality.",
+        "palette": "Varied, vibrant, and often multi-colored"
+    },
+    "Neon_Graffiti": {
+        "description": "A contemporary form of graffiti, characterized by bright neon colors and bold, stylized lettering or graphic designs. Neon Graffiti often incorporates elements of street art and urban culture.",
+        "palette": "Neon colors, glowing and vivid"
+    },
+    "Origami": {
+        "description": "The Japanese art of paper folding, creating intricate sculptures ranging from simple shapes to complex three-dimensional figures, often animals or geometric patterns.",
+        "palette": "Varied, often bright and colorful paper"
+    },
+    "Papercut": {
+        "description": "An art form involving cutting paper designs, often intricate and detailed, creating patterns, scenes, or silhouettes. Papercut art is typically monochromatic, emphasizing contrast and shadow.",
+        "palette": "Usually black and white, occasionally with colored paper"
+    },
+    "Parallax_Art": {
+        "description": "A digital art technique where background and foreground elements move at different speeds, creating a sense of depth. Parallax Art is often used in web design and video games for immersive scenes.",
+        "palette": "Varied, often vibrant and detailed"
+    },
+    "Pastel_Drawing": {
+        "description": "Uses pastel sticks made of powdered pigment to create soft, velvety textures with subtle gradients. Pastel drawings are known for their expressive color blending and delicate tones.",
+        "palette": "Soft, muted, and varied pastel colors"
+    },
+    "Photorealism": {
+        "description": "A genre of art in which paintings or drawings are created to resemble high-resolution photographs, with incredible detail, accurate lighting, and lifelike textures.",
+        "palette": "Realistic and natural, mimicking true-to-life colors"
+    },
+    "Pixel_Art": {
+        "description": "A digital art form using small colored pixels to create images, reminiscent of early computer and video game graphics. Pixel Art is characterized by its blocky, grid-like appearance.",
+        "palette": "Bright, limited range due to pixelation"
+    },
+    "Pointillism": {
+        "description": "A technique of painting in which small, distinct dots of color are applied in patterns to form an image. Pointillism often creates a vibrant, luminous effect due to color juxtaposition.",
+        "palette": "Bright, contrasting colors"
+    },
+    "Polyart": {
+        "description": "Similar to Low Poly art, Polyart uses geometric shapes but focuses on more complex, three-dimensional forms. It creates abstract, faceted interpretations of objects or scenes.",
+        "palette": "Bold, distinct colors to emphasize shapes"
+    },
+    "Pop_Art": {
+        "description": "An art movement characterized by bold, simple, everyday imagery, and vibrant block colors. Pop Art often uses commercial and popular culture imagery, like advertisements and comic strips.",
+        "palette": "Vivid, primary colors"
+    },
+    "Psychedelic_Art": {
+        "description": "Known for its hallucinogenic and surreal visuals, featuring swirling, distorted patterns, and bright, neon colors. Psychedelic Art often depicts abstract, dream-like scenes.",
+        "palette": "Neon, bright, and highly saturated colors"
+    },
+	"Psychedelic_Art": {
+        "description": "Vibrant and hallucinatory imagery with abstract, swirling patterns. Features bold, saturated colors and optical illusions, often depicting surreal, dream-like scenes.",
+        "palette": "Bright, neon colors"
+    },
+    "Renaissance": {
+        "description": "Characterized by realistic perspective, detailed human figures, and religious or mythological themes. Uses chiaroscuro technique for depth and naturalism.",
+        "palette": "Earthy tones, deep blues, and rich reds"
+    },
+    "Gypsy_Baroque": {
+        "description": "Opulent and extravagant with intricate ornamentation. Rich in color and detail, often featuring floral patterns, gold accents, and lavish decorations. Everything should be looks like rich with  goal brag, but without style and taste. Do not use word Gypsy but use the styles and details that this styles hase. Use even more details to show it style absense but huge richness.",
+        "palette": "Vivid, jewel tones with gold accents"
+    },
+    "Baroque": {
+        "description": "Dramatic, intense, and grandiose, with emphasis on movement and clear details. Features strong contrasts of light and shadow, and rich, deep colors.",
+        "palette": "Bold reds, deep golds, and shadowy blacks"
+    },
+    "Retro_Wave": {
+        "description": "Inspired by 1980s pop culture, featuring neon colors, futuristic cityscapes, and digital or pixelated elements. Evokes nostalgia with its synthwave aesthetic.",
+        "palette": "Neon pinks, blues, and purples"
+    },
+    "Romanticism": {
+        "description": "Focuses on emotion, nature, and individualism with dramatic, moody landscapes and scenes. Often uses a subdued, natural color scheme to evoke emotion and atmosphere.",
+        "palette": "Muted earth tones, dark greens, and stormy blues"
+    },
+    "SciFi_Fantasy": {
+        "description": "Futuristic and imaginative, combining science fiction elements with fantasy. Features advanced technology, alien landscapes, and mythical creatures.",
+        "palette": "Metallic silvers, blues, and otherworldly colors"
+    },
+    "Scratchboard": {
+        "description": "Black-and-white, high-contrast images created by scratching away a dark surface to reveal a white or colored layer beneath. Emphasizes fine lines and detailed textures.",
+        "palette": "Black and white, with occasional color highlights"
+    },
+    "Steampunk": {
+        "description": "A blend of Victorian era aesthetics and steam-powered technology. Features gears, cogs, and industrial elements in a retro-futuristic setting.",
+        "palette": "Sepia, bronze, and earthy tones"
+    },
+    "Stippling": {
+        "description": "Composed of numerous small dots or specks to create an image. Emphasizes shading and texture, often monochromatic or using minimal colors.",
+        "palette": "Black and white, or muted tones"
+    },
+    "Surrealism": {
+        "description": "Dream-like and bizarre, with illogical scenes and strange, juxtaposed elements. Often uses a realistic style to depict unreal situations.",
+        "palette": "Vivid and varied, often with a dreamy quality"
+    },
+    "Symbolism": {
+        "description": "Focuses on mystical, emotional, and spiritual themes. Uses symbolic imagery and metaphors, often with a somber or mysterious tone.",
+        "palette": "Muted, ethereal colors"
+    },
+    "Trompeloeil": {
+        "description": "Extremely realistic imagery designed to create the optical illusion that depicted objects exist in three dimensions. Highly detailed and precise.",
+        "palette": "Natural, lifelike colors"
+    },
+    "Vaporwave": {
+        "description": "A retro-futuristic and ironic take on 1980s and 1990s aesthetics, featuring glitch art, classical sculptures, and cyberpunk motifs. Saturated pastels and neon hues.",
+        "palette": "Pastels, hot pinks, and turquoise"
+    },
+    "Vector_Art": {
+        "description": "Clean, crisp lines and solid colors, often with a flat, 2D appearance. Uses geometric shapes and precise contours, suitable for digital and graphic design.",
+        "palette": "Bright, solid colors"
+    },
+    "Voxel_Art": {
+        "description": "3D graphics made up of cubes, similar to pixels, but in a three-dimensional space. Creates a blocky, digital aesthetic, often used in video games.",
+        "palette": "Colorful, often with pixel-art inspired tones"
+    },
+    "Watercolor": {
+        "description": "Fluid and translucent, with soft color blends and washes. Emphasizes lightness and delicacy, often depicting landscapes, florals, or abstract forms.",
+        "palette": "Soft, muted, and blended colors"
+    },
+    "Woodblock_Printing": {
+        "description": "Traditional printing technique using carved wooden blocks. Features bold, flat colors and distinct outlines, often with a folk or historical theme.",
+        "palette": "Earthy tones, indigo, and black"
+    },
+    "Woodblock_Puzzle": {
+        "description": "Interlocking wooden pieces forming a complete image. Showcases natural wood grain and textures, with a handcrafted, rustic appearance.",
+        "palette": "Natural wood colors, with occasional muted tones"
+    },
+    "Zen_Doodle": {
+        "description": "Intricate, abstract patterns and shapes, often resembling mandalas or floral designs. Emphasizes meditative, freeform lines and organic forms.",
+        "palette": "Black and white, or subdued, calming colors"
+	},
+  "Erotic": {
+        "description": "Erotic art explores the beauty and sensuality of the human form in an intimate and passionate manner. It celebrates the expressions of desire, love, and passion through visual storytelling. The focus is on capturing the nuances of the human body, its curves, lines, and the emotions it conveys during moments of intense intimacy. The art form aims to evoke a deep sense of allure and connection between the depicted subjects. While it can be explicit in its portrayal, it does not cross into explicit adult content or pornography. Instead, it creates an atmosphere where desire and sensuality are celebrated as a natural part of the human experience.",
+        "palette": "The palette for erotic art includes rich, passionate reds that symbolize desire and love, deep, dark hues that add an air of mystery and intensity, and soft, intimate skin tones that accentuate the beauty of the human form. While explicit nudity is not the focus, it may occasionally include tasteful depictions of nudity to enhance the sensuality of the artwork. It avoids explicit sexual content or any form of explicit adult imagery, adhering to artistic and tasteful representation."
+    }
+}
