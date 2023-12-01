@@ -5,8 +5,6 @@ from openai import OpenAI
 from icecream import ic
 import datetime
 from pprint import pprint as pp
-import winsound
-from pprint import pprint as pp
 
 client = OpenAI()
 
@@ -34,6 +32,8 @@ def generate_image(picture_prompt):
     # downloads the image to a file
     bin_picture = requests.get(image_url)
     return bin_picture.content
+
+
 def save_picture(file_name, picture):
     print("\t\tsaving image ...")
     file = open(file_name, "wb")
