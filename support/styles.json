@@ -63,7 +63,7 @@
         "description": "Super-deformed characters with oversized heads and cute, small bodies, emphasizing cuteness.",
         "palette": "Bright and cheerful colors."
     },
-    "Animal Parade": {
+    "Animal_Parade": {
         "description": "Whimsical characters in a parade setting, wearing colorful costumes and accessories.",
         "palette": "Rainbow colors and playful combinations."
     },
@@ -75,7 +75,7 @@
         "description": "Futuristic, dystopian settings with animal characters featuring cyber enhancements and neon lights.",
         "palette": "Dark and neon colors with a tech feel."
     },
-    "Watermelon Slice": {
+    "Watermelon_Slice": {
         "description": "Characters with a watermelon-inspired color scheme of green and pink, giving a refreshing and fun vibe.",
         "palette": "Green and pink with contrasting white."
     },
@@ -139,7 +139,7 @@
     "description": "Raw, blocky structures and rugged materials, focusing on minimalist, monolithic forms and a stark, imposing presence.",
     "palette": "Monochromatic, emphasizing grays and earth tones"
   },
-  "Byzantine-Art": {
+  "Byzantine_Art": {
     "description": "Religious and imperial themes with flat, two-dimensional figures, gold backgrounds, and a hierarchical scale of figures.",
     "palette": "Gold, deep blues, reds, and greens"
   },
@@ -151,7 +151,7 @@
     "description": "Textured, smudgy lines and shades, capturing light and shadow with a dynamic range from deep blacks to soft grays.",
     "palette": "Black, white, and varying shades of gray"
   },
-  "Chinese Brush Painting": {
+  "Chinese_Brush_Painting": {
     "description": "Fluid, graceful brushstrokes capturing the essence of subjects, often nature-themed, with an emphasis on simplicity and elegance.",
     "palette": "Black ink with subtle color accents"
   },
@@ -355,10 +355,6 @@
         "description": "Known for its hallucinogenic and surreal visuals, featuring swirling, distorted patterns, and bright, neon colors. Psychedelic Art often depicts abstract, dream-like scenes.",
         "palette": "Neon, bright, and highly saturated colors"
     },
-	"Psychedelic_Art": {
-        "description": "Vibrant and hallucinatory imagery with abstract, swirling patterns. Features bold, saturated colors and optical illusions, often depicting surreal, dream-like scenes.",
-        "palette": "Bright, neon colors"
-    },
     "Renaissance": {
         "description": "Characterized by realistic perspective, detailed human figures, and religious or mythological themes. Uses chiaroscuro technique for depth and naturalism.",
         "palette": "Earthy tones, deep blues, and rich reds"
@@ -378,6 +374,14 @@
     "Romanticism": {
         "description": "Focuses on emotion, nature, and individualism with dramatic, moody landscapes and scenes. Often uses a subdued, natural color scheme to evoke emotion and atmosphere.",
         "palette": "Muted earth tones, dark greens, and stormy blues"
+    },
+    "Roman_Fresco": {
+      "description": "This style emulates the characteristics of ancient Roman frescoes, known for their rich, earthy tones and realistic yet idealized portrayal of figures and landscapes. It often features architectural elements like columns and arches, with scenes depicting mythology, daily life, or historical events, rendered with a sense of depth and perspective. The figures are elegantly posed, showcasing draped garments and expressive faces, set against a background that fades into softer, less detailed surroundings.",
+      "palette": "Earthy tones such as ochre, terra cotta, muted reds, deep blues, and olive greens, with highlights in lighter shades like pale yellows and off-whites."
+    },
+    "Renaissance_Fresco": {
+        "description": "Renaissance fresco style is distinguished by its focus on realism, balanced compositions, and a harmonious use of color. This style often features religious or mythological scenes, characterized by detailed human figures with naturalistic proportions and expressive gestures. Architectural elements are precisely rendered, creating a sense of depth and perspective, and the use of chiaroscuro (the contrast of light and shadow) adds a dramatic effect.",
+        "palette": "The palette includes a range of soft, muted tones such as earthy browns, deep blues, and rich greens, alongside brighter hues like vermilion and ultramarine, often used to highlight important figures or elements."
     },
     "SciFi_Fantasy": {
         "description": "Futuristic and imaginative, combining science fiction elements with fantasy. Features advanced technology, alien landscapes, and mythical creatures.",

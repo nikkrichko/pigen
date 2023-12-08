@@ -2,4 +2,3 @@ openai
 click
 requests
 icecream
-pprint
