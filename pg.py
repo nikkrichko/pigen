@@ -11,7 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
 import support.functions as sf
 
 
-openAIclient = OpenAI()
+openAIClient = OpenAI()
 model_to_chat = "gpt-3.5-turbo-1106"
 # model_to_chat = "gpt-4-1106-preview"
 model_to_image = "dall-e-3"
@@ -27,15 +27,24 @@ def cli():
     """CLI Application for Various Tasks"""
     pass
 
+
 @cli.command()
 @click.option('--prompt', required=True, help='Prompt text for generating an idea.')
 @click.option('--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
 def idea(prompt, outputfile):
-    """Generate an idea based on a prompt and save it to a file."""
+    """
+    Generate an Idea
+    This method generates a prompt for generating pictures on a given prompt ideas. The generated idea is saved to an output file.
+    Args:
+        prompt (str): The prompt text for generating the idea.
+        outputfile (str): The path of the output file to save the generated idea.
+    Returns:
+        None
+    Example Usage:
+        idea("--prompt 'give me a picture of a beautiful woman with handsome man.' --outputfile 'my_idea.txt'")
+    """
     print("\tGenerating prompt based on idea ...")
-    idea_text = sf.generate_idea(prompt)
-    response_msg = sf.get_dalle_prompt_based_on_input(openAIclient, idea_text, model_to_chat)
-    sf.save_text_to_file(response_msg, outputfile)
+    sf.generate_and_save_idea(prompt, outputfile, openAIClient, model_to_chat)
     click.echo(f'Idea generated and saved to {outputfile}.')
 
 
@@ -79,10 +88,10 @@ def picByStyle(input_file, prompt, style, output_file):
     sf.save_text_to_file(add_style, "temp/02_request_to_adopt_prompt.txt")
 
     print(f"\tAdopting initial prompt to style {style} ...")
-    adopted_prompt = sf.get_dalle_prompt_based_on_input(openAIclient, add_style, model_to_chat)
+    adopted_prompt = sf.get_dalle_prompt_based_on_input(openAIClient, add_style, model_to_chat)
     sf.save_text_to_file(adopted_prompt, "temp/03_adopted_prompt.txt")
 
-    image = sf.generate_image(adopted_prompt, openAIclient, size=PIC_SIZE, quality=PIC_QUALITY)
+    image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
 
     output_file = sf.replace_last_path_part_with_datetime(output_file, style)
     sf.save_picture(output_file, image)

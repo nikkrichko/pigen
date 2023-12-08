@@ -129,6 +129,10 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
     response_msg = completion.choices[0].message.content
     return response_msg
 
+def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
+    idea_text = generate_idea(prompt)
+    response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat)
+    save_text_to_file(response_msg, outputfile)
 
 def generate_idea(prompt):
     # Implement idea generation logic
