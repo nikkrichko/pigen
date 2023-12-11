@@ -1,6 +1,3 @@
-import datetime
-import os
-
 import click
 from openai import OpenAI
 from icecream import ic
@@ -9,6 +6,7 @@ from support import functions as sf
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
 import support.functions as sf
+import concurrent.futures
 
 
 openAIClient = OpenAI()
@@ -17,7 +15,7 @@ model_to_chat = "gpt-3.5-turbo-1106"
 model_to_image = "dall-e-3"
 # 1792x1024
 PIC_SIZE="1024x1024"
-PIC_SIZE="1792x1024"
+# PIC_SIZE="1792x1024"
 PIC_QUALITY="hd"
 
 
@@ -29,9 +27,10 @@ def cli():
 
 
 @cli.command()
-@click.option('--prompt', required=True, help='Prompt text for generating an idea.')
-@click.option('--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
-def idea(prompt, outputfile):
+@click.option('-p', '--prompt', default=None, help='Prompt text for generating an idea.')
+@click.option('-i', '--inputfile', default=None, type=click.Path(exists=True), help='Input file with text for generating the idea.')
+@click.option('-0', '--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
+def idea(prompt, outputfile, inputfile):
     """
     Generate an Idea
     This method generates a prompt for generating pictures on a given prompt ideas. The generated idea is saved to an output file.
@@ -43,23 +42,64 @@ def idea(prompt, outputfile):
     Example Usage:
         idea("--prompt 'give me a picture of a beautiful woman with handsome man.' --outputfile 'my_idea.txt'")
     """
+    if prompt is None and inputfile is None:
+        raise click.UsageError("You must provide either a prompt or an input file.")
+    if prompt is not None and inputfile is not None:
+        raise click.UsageError("You can't provide both a prompt and an input file.")
+
+    if prompt is not None:
+        text_prompt = prompt
+    if inputfile is not None:
+        with open(inputfile, 'r') as file:
+            text_prompt = file.read().strip()
+
     print("\tGenerating prompt based on idea ...")
-    sf.generate_and_save_idea(prompt, outputfile, openAIClient, model_to_chat)
+    sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
     click.echo(f'Idea generated and saved to {outputfile}.')
 
 
 
 
 @cli.command()
-@click.option('--numOfPictures', type=int, default=5, help='Number of pictures to generate.')
-@click.option('--numOfRandomStyles', type=int, default=3, help='Number of random styles to apply.')
-@click.option('--listofStyles', type=str, help='Comma-separated list of specific styles to apply.')
-def multistyle(numofpictures, numofrandomstyles, listofstyles):
+@click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
+@click.option('-s', '--style', type=str, help='List of styles to apply to the picture.[comma separated]')
+@click.option('-r', '--random_num', type=int, default=0, help='Generate number of different random styles')
+@click.option('-o', '--output_file', type=str, help='Where to save picture')
+@click.option('-w', '--workers_num', type=int, default=3, help='Number of workers to use for parallel execution.')
+def multistyle(input_file, style, output_file, workers_num, random_num):
     # Implement logic to generate pictures with specified styles
-    picture_paths = sf.generate_multistyle_pictures(numofpictures, numofrandomstyles, listofstyles)
-    click.echo(f'{len(picture_paths)} pictures generated with multiple styles:')
-    for path in picture_paths:
-        click.echo(path)
+    if random_num != 0 and style is not None:
+        raise Exception("You can't specify both random_num and list_of_styles. Please specify only one of them.")
+
+    if random_num != 0:
+        print(f"Generating num of random styles: {random_num}")
+        list_of_styles = sf.get_random_styles_from_file(random_num)
+    else:
+        list_of_styles = style.split(",")
+
+    print(f"List of styles: {list_of_styles}")
+
+    # Define a function to perform task in parallel
+    initial_idea_prompt = input_file.read()
+    def task_gen_adopted_prompt(initial_idea_prompt, style,output_file):
+        print(f"Processing style: {style}")
+        additional_user_prompt = ""
+        adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
+        output_adopted_prompt_file = "temp/multi/03_adopted_prompt.txt"
+        output_file_path = sf.replace_last_path_part_with_datetime(output_adopted_prompt_file, style)
+        sf.save_text_to_file(adopted_prompt, output_file_path)
+        image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
+        output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+        sf.save_picture(output_file, image)
+
+        return adopted_prompt
+
+    # Use ThreadPoolExecutor to run the tasks in parallel
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers_num) as executor:
+        executor.map(task_gen_adopted_prompt, [initial_idea_prompt]*len(list_of_styles), list_of_styles, [output_file]*len(list_of_styles))
+
+    pass
+
 
 @cli.command()
 @click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
@@ -82,24 +122,27 @@ def picByStyle(input_file, prompt, style, output_file):
     Example usage:
     picByStyle(open('prompt.txt', 'r'), "Generate a beautiful landscape", "landscape_style", "output.png")
     """
-    input_text = input_file.read()
-
-    add_style = sf.adopt_style(input_text, style, prompt)
-    sf.save_text_to_file(add_style, "temp/02_request_to_adopt_prompt.txt")
-
-    print(f"\tAdopting initial prompt to style {style} ...")
-    adopted_prompt = sf.get_dalle_prompt_based_on_input(openAIClient, add_style, model_to_chat)
-    sf.save_text_to_file(adopted_prompt, "temp/03_adopted_prompt.txt")
+    initial_idea_prompt = input_file.read()
+    additional_user_prompt = prompt
+    adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
 
     image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
-
     output_file = sf.replace_last_path_part_with_datetime(output_file, style)
     sf.save_picture(output_file, image)
     click.echo(f'Picture generated with style "{style}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
 
 
-
+@cli.command()
+@click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
+@click.option('-o', '--output_file', type=str, help='Where to save picture')
+def picFromPromptFile(input_file, output_file):
+    initial_idea_prompt = input_file.read()
+    image = sf.generate_image(initial_idea_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
+    output_file = sf.replace_last_path_part_with_datetime(output_file, "")
+    sf.save_picture(output_file, image)
+    click.echo(f'Picture generated from file "{input_file}" based on the input prompt and saved:\n---\n{output_file}')
+    ic(f"Picture saved to {output_file}")
 
 if __name__ == '__main__':
     cli()

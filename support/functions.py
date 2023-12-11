@@ -1,17 +1,16 @@
 import time
-
-import requests
+import random
+from typing import Any
+import openai
 import json
 import os
 import requests
-from openai import OpenAI
-from icecream import ic
 import datetime
-from pprint import pprint as pp
-from pprint import pprint as pp
 
 
-
+ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
+ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
+FILE_WITH_STYLES = 'support/styles.json'
 
 def execution_time_decorator(func):
     def wrapper(*args, **kwargs):
@@ -82,13 +81,22 @@ def reformatIdeaPrompt(text_constant, *args):
         return None
 
 
+def get_random_styles_from_file( num_of_styles):
+    with open(FILE_WITH_STYLES, 'r') as json_file:
+        styles_map = json.load(json_file)
+    styles = list(styles_map.keys())
+    random_styles = random.sample(styles, num_of_styles)
+    return random_styles
+
+
 @execution_time_decorator
 def adopt_style(picture_prompt, style_name, additional_prompt=""):
     print(f"\tAdopting prompt to {style_name} ...")
-
     # read json from file styles.json
-    file_with_styles = 'support/styles.json'
-    with open(file_with_styles, 'r') as json_file:
+
+    # TODO if style_name is not in styles.json then resuest for style description and palette at chatgpt
+
+    with open(FILE_WITH_STYLES, 'r') as json_file:
         styles_map = json.load(json_file)
     try:
         style_description = styles_map[style_name]["description"]
@@ -101,6 +109,14 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
     picture_prompt = reformatIdeaPrompt(init_prompt_for_reformating, picture_prompt, style_name, style_description, style_palette,additional_prompt)
     return picture_prompt
 
+def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,openAIClient,model_to_chat):
+    add_style = adopt_style(initial_idea_prompt, style, additional_user_prompt)
+    save_text_to_file(add_style, ADOPT_PROMPT_TXT_PATH)
+    print(f"\tAdopting initial prompt to style {style} ...")
+    adopted_prompt = get_dalle_prompt_based_on_input(openAIClient, add_style, model_to_chat)
+    save_text_to_file(adopted_prompt, ADOPTED_PROMPT_PATH)
+    return adopted_prompt
+
 @execution_time_decorator
 def get_dalle_prompt_based_on_input(OpenAIclient, input_prompt, model_to_chat):
     role = """As a Prompt Generator Specialist for DALL·E, you will craft detailed prompts that translate user ideas into vivid, DALL·E-compliant visual concepts, demanding creativity and an understanding of artistic styles. Your role involves refining prompts for accuracy, integrating various artistic elements, and ensuring they adhere to content guidelines. Collaboration with users to fine-tune their visions and enhance their experience with DALL·E is key. You'll analyze feedback from generated images to improve prompt effectiveness and educate users on creating impactful prompts. This position requires strong creative skills, language proficiency, and a good grasp of DALL·E's capabilities, offering a unique blend of art and technology."""
@@ -110,8 +126,7 @@ def get_dalle_prompt_based_on_input(OpenAIclient, input_prompt, model_to_chat):
     return response_msg
 
 
-from typing import Any
-import openai
+
 
 def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: str, model_to_chat: str) -> Any:
     try:
@@ -131,7 +146,7 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
 
 def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
     idea_text = generate_idea(prompt)
-    response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat)
+    response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat=model_to_chat, gpt_role ="")
     save_text_to_file(response_msg, outputfile)
 
 def generate_idea(prompt):
