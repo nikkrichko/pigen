@@ -12,6 +12,60 @@ ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
 FILE_WITH_STYLES = 'support/styles.json'
 
+
+
+
+import itertools
+import sys
+import time
+import threading
+# Define the decorator
+def spinner_decorator(method):
+    def spinner(*args, **kwargs):
+        # Define the spinner characters
+
+        spinner_chars = ['+......', '.+.....', '..+....', '...+...', '....+..','.....+.','......+','.....+.', '....+..', '...+...', '..+....','.+.....']
+
+        # Initialize the stop flag
+        stop_spinner = threading.Event()
+
+        # Function to display the spinner
+        def display_spinner():
+            for char in itertools.cycle(spinner_chars):
+                sys.stdout.write('\r' + char)
+                sys.stdout.flush()
+                if stop_spinner.is_set():
+                    break
+                time.sleep(0.1)
+
+        try:
+            # Start a background thread to display the spinner
+            spinner_thread = threading.Thread(target=display_spinner)
+            spinner_thread.daemon = True
+            spinner_thread.start()
+
+            # Call the original method
+            result = method(*args, **kwargs)
+
+            return result
+        except Exception as e:
+            # Handle exceptions
+            if spinner_thread is not None:
+                stop_spinner.set()  # Set the stop flag to stop the spinner
+                spinner_thread.join()
+            sys.stdout.write('\r')
+            sys.stdout.flush()
+            raise e
+        finally:
+            # Ensure the spinner thread is stopped and the line is cleared
+            if spinner_thread is not None:
+                stop_spinner.set()  # Set the stop flag to stop the spinner
+                spinner_thread.join()
+                sys.stdout.write('\r')
+                sys.stdout.flush()
+
+    return spinner
+
 def execution_time_decorator(func):
     def wrapper(*args, **kwargs):
         start_time = time.time()
@@ -102,7 +156,7 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
         style_description = styles_map[style_name]["description"]
         style_palette = styles_map[style_name]["palette"]
     except KeyError as e:
-        print(f"Error: Somme issue with style '{style_name}'. \nCheck {file_with_styles} file.")
+        print(f"Error: Somme issue with style '{style_name}'. \nCheck {FILE_WITH_STYLES} file.")
         exit(1)
         return None
 
@@ -144,6 +198,7 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
     response_msg = completion.choices[0].message.content
     return response_msg
 
+@spinner_decorator
 def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
     idea_text = generate_idea(prompt)
     response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat=model_to_chat, gpt_role ="")
@@ -162,10 +217,16 @@ def generate_idea(prompt):
         Characters: Detail any characters involved, including their appearance, attire, expressions, and actions. Mention the number of characters and their roles or significance in the scene.
         Objects and Props: List any significant objects or props that should be included, describing their appearance, placement, and relevance to the scene.
         Perspective and Composition: Indicate the desired perspective (e.g., first-person, bird's-eye) and composition elements (e.g., focus points, balance).
-        Please ensure that the prompt is structured clearly, with each category distinctly defined. This structure should allow for easy modification of specific details, enabling me to adjust elements as needed while maintaining the overall integrity of the idea.
+        Please ensure that the prompt is structured clearly, with each category distinctly defined. 
+        This structure should allow for easy modification of specific details, enabling me to adjust elements as needed while maintaining the overall integrity of the idea.
+        Identify as much main subject as possible. Ensure that the main subject is clearly separated from the background and other details.
+        Each main elements hshold have own sections and onw categories of description.
+        Each element of the resulted prompt should have own category and it should be easy to modify it. Split prompt to sections, as much as possible sections. 
+        Each category and sub category should easy to separete and modify. Better more categories with less details than less categories with more details.
+        
 
         requirements to answer:
-        it should be only prompt. ensure there are no any other comments to the prompt. nor any comment in the beginning neither in the end.
+        It should be only prompt. Ensure there are no any other comments to the prompt. nor any comment in the beginning neither in the end.
         there should be separate section for each element of the idea. it should be clear what is setting, what is characters, what is objects and props, what is perspective and composition.
         there should be  clear separation where is main subject and where is details.
 """
@@ -195,3 +256,5 @@ def replace_last_path_part_with_datetime(file_path, style=""):
     new_file_path = os.path.join(directory, new_file_name)
 
     return new_file_path
+
+
