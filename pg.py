@@ -7,16 +7,29 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
 import support.functions as sf
 import concurrent.futures
+import support.logger as logger
+import support.Configurator as Config
+from support.logger import Logger
 
 
 openAIClient = OpenAI()
-model_to_chat = "gpt-3.5-turbo-1106"
-# model_to_chat = "gpt-4-1106-preview"
-model_to_image = "dall-e-3"
-# 1792x1024
-PIC_SIZE="1024x1024"
-# PIC_SIZE="1792x1024"
-PIC_QUALITY="hd"
+
+
+# model_to_chat = "gpt-3.5-turbo-1106"
+# # model_to_chat = "gpt-4-1106-preview"
+# model_to_image = "dall-e-3"
+# # 1792x1024
+# PIC_SIZE="1024x1024"
+# # PIC_SIZE="1792x1024"
+# PIC_QUALITY="hd"
+
+
+
+# MAIN_MODEL: "gpt-3.5-turbo-0125"
+# ART_MODEL: "dall-e-3"
+# PIC_SIZE: "1024x1024"
+# LOG_LEVEL: "INFO"
+# PIC_QUALITY: "hd"
 
 
 
@@ -54,6 +67,7 @@ def idea(prompt, outputfile, inputfile):
             text_prompt = file.read().strip()
 
     print("\tGenerating prompt based on idea ...")
+
     sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
     click.echo(f'Idea generated and saved to {outputfile}.')
 
@@ -145,4 +159,9 @@ def picFromPromptFile(input_file, output_file):
     ic(f"Picture saved to {output_file}")
 
 if __name__ == '__main__':
+    config = Config.Config()
+    model_to_chat = config.get("MAIN_MODEL")
+    model_to_image = config.get("ART_MODEL")
+    PIC_SIZE = config.get("PIC_SIZE")
+    PIC_QUALITY = config.get("PIC_QUALITY")
     cli()

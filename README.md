@@ -32,8 +32,8 @@ Generates 5 pictures with 3 random styles applied
 `
 Generates 3 pictures with specific styles "style1," "style2," and "style3"
 
-## Example usage of the 'picByStyle' command
-`python pg.py picByStyle -i <input_file> -p <prompt> -s <style> -o <output_file>`
+## Example usage of the 'picbystyle' command
+`python pg.py picbystyle -i <input_file> -p <prompt> -s <style> -o <output_file>`
 
 Command-Line options:
 
@@ -46,6 +46,6 @@ Command-Line options:
 `-o, --output_file <file_name>` : The filename where the resulting picture will be saved.
 
 Example of usage
-`python pg.py picByStyle -i prompt.txt -p "Generate a beautiful landscape" -s landscape_style -o output.png`
+`python pg.py picbystyle -i prompt.txt -p "Generate a beautiful landscape" -s landscape_style -o output.png`
 
 Generates a picture with the specified style "artistic_style" based on the input prompt from 'input_prompt.txt'

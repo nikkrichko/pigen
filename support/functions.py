@@ -6,6 +6,8 @@ import os
 import requests
 import datetime
 from support.decorators import spinner_decorator, execution_time_decorator
+from support.logger import delog
+
 
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
@@ -15,10 +17,11 @@ FILE_WITH_STYLES = 'support/styles.json'
 # Define the decorator
 
 @execution_time_decorator
-def generate_image(picture_prompt, opneai_client, model="dall-e-3", size="1024x1024", quality="standard", num_of_pics=1):
+@spinner_decorator
+def generate_image(picture_prompt, openai_client, model="dall-e-3", size="1024x1024", quality="standard", num_of_pics=1):
     global response
     print("\tGenerating image ...")
-    response = opneai_client.images.generate(
+    response = openai_client.images.generate(
         model=model,
         prompt=picture_prompt,
         size=size,
@@ -54,16 +57,19 @@ Add background description according to the style. but background should contain
 you need also to describe Mood and Atmosphere: Convey the overall mood or atmosphere of the illustration, including color palette preferences and lighting according to provided style.
 If user provide multiple styles you need to combine it
 It should be possible to edit this details in easy way
-output should be plain text. ut should should be only prompt and nothing else, ensure there are no any comments, only prompt. I should just copy and use this prompt.
+output should be plain text. It should be only prompt and nothing else, ensure there are no any comments, only prompt. I should just copy and use this prompt.
 PROMPT to adopt:
 {}
 USE next styles: {}
 Style description: {}. you need to adopt prompt to this style. change background, mood, atmosphere, colors, etc.
 Style palette: {}
 Next is user additional requirements that you should adopt it to prompt: {}
+
+Ensure that the output prompt should be less than 2500 char without loosing main idea and criteria.
 """
 
 
+@spinner_decorator
 def reformatIdeaPrompt(text_constant, *args):
     try:
         formatted_prompt_for_redesign = text_constant.format(*args)
@@ -137,6 +143,7 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
     return response_msg
 
 @spinner_decorator
+@delog()
 def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
     idea_text = generate_idea(prompt)
     response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat=model_to_chat, gpt_role ="")
@@ -167,6 +174,132 @@ def generate_idea(prompt):
         It should be only prompt. Ensure there are no any other comments to the prompt. nor any comment in the beginning neither in the end.
         there should be separate section for each element of the idea. it should be clear what is setting, what is characters, what is objects and props, what is perspective and composition.
         there should be  clear separation where is main subject and where is details.
+        answer should be in yaml. but it should not contain any  quoutes n the beginning or in the end. Just text like a yaml.
+        use next structure of like an example, but not limit yourself if it requires to create more comprehensive prompt.
+        Scene Description:
+  - Setting:
+    - Location
+    - Time of Day
+    - Weather
+	- Geography
+  - Characters:
+    - Number of Characters
+    - Character Appearances
+    - Character Actions
+	- Character Relationships
+  - Objects and Props:
+    - Main Subject
+    - Relevant Objects
+    - Props
+    - Environmental Elements
+	- Other Objects
+	
+  - Perspective and Composition:
+    - Viewing Angle
+    - Composition Style
+    - Focal Point
+    - Balance and Symmetry
+    - Depth of Field
+  - Action and Movement:
+    - Primary Action
+    - Secondary Actions
+    - Character Movement
+  - Lighting and Shadows:
+    - Lighting Sources
+	- Lighting Style
+    - Shadows
+  - Color Palette:
+    - Dominant Colors
+    - Color Contrast
+  - Mood and Atmosphere:
+    - Emotional Tone
+    - Atmosphere
+    - Tension Level
+    - Overall Mood
+  - Architecture and Design:
+    - Architectural Style
+    - Design Details
+	- Building Materials
+    - Structural Details
+    - Interior Design
+  - Seasons:
+    - Seasonal Setting
+    - Seasonal Changes
+    - Seasonal Activities
+    - Natural Phenomena
+  - Nature Elements:
+    - Flora
+    - Fauna
+	- Landscape Features
+    - Vegetation
+    - Natural Elements
+    - Bodies of Water
+    - Terrain Characteristics
+  - Animals and Wildlife:
+    - Animal Species
+    - Animal Behavior
+    - Habitat Details
+    - Wildlife Interactions
+  - Industrial Environments:
+    - Factories and Mills
+    - Machinery and Manufacturing
+    - Urban Industrial Scenes
+    - Pollution and Smoke
+  - Cultural Landscapes:
+    - Cultural Heritage Sites
+    - Historical Monuments
+    - Cultural Significance
+    - Traditional Architecture
+  - Vehicles and Transportation:
+    - Types of Vehicles
+    - Vehicle Placement
+	- Vehicle Condition
+    - Traffic
+    - Transportation Infrastructure
+  - Technology and Gadgets:
+    - Technological Features
+    - High-Tech Devices
+  - Clothing and Attire:
+    - Clothing Styles
+    - Accessories
+    - Costume Details
+    - Fashion Era
+  - Interiors:
+    - Furniture and Decor
+	- Interior Design Themes
+    - Furniture Styles
+    - Decorative Details
+    - Room Layout
+
+  - History and Era:
+    - Historical Period
+    - Era-specific Details
+	- Historical Era
+    - Notable Historical Figures
+    - Historical Artifacts
+	- Anachronisms
+  - Symbolism and Iconography:
+    - Symbols
+    - Iconic Imagery
+  - Transportation:
+    - Modes of Transportation
+    - Transportation Infrastructure
+  - Cuisine and Food:
+    - Types of Food
+    - Food Presentation
+    - Dining Setup
+    - Culinary Details
+  - Events and Festivals:
+    - Event Type
+    - Crowd Size
+    - Performances
+    - Decorations
+  - Crowd and Activities:
+    - Size of the Crowd
+    - Activities and Interactions
+        
+        
+        
 """
 
 
