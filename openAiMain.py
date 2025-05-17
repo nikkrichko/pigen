@@ -46,7 +46,7 @@ def save_picture(file_name, picture):
 # if not os.path.exists(file_name):
 #     os.mkdir(file_name)
 
-# read pompt from file prompt.txt
+# read prompt from file prompt.txt
 with open("prompt.txt", "r") as f:
     picture_prompt = f.read()
 
