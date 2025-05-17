@@ -119,4 +119,6 @@ can inspect the generated text that was sent to the API.
 
 With these commands you can quickly experiment with different prompts and
 styles to produce images using the DALL·E API. Consult `pg.py` for additional
-options and feel free to extend `support/styles.json` with your own styles.
+options and use the `addstyle` command (which requires `--name`, `--description`
+and `--palette`) or edit `support/styles.json` to extend it with your own
+styles.

@@ -158,6 +158,19 @@ def picFromPromptFile(input_file, output_file):
     click.echo(f'Picture generated from file "{input_file}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
 
+
+@cli.command()
+@click.option('-n', '--name', required=True, help='Style title')
+@click.option('-d', '--description', required=True, help='Style description')
+@click.option('-p', '--palette', required=True, help='Color palette for the style')
+def addstyle(name, description, palette):
+    """Add a new style entry to the styles file."""
+    try:
+        sf.add_style_to_file(name, description, palette)
+    except ValueError as exc:
+        raise click.ClickException(str(exc))
+    click.echo(f'Style "{name}" added to styles file.')
+
 if __name__ == '__main__':
     config = Config.Config()
     model_to_chat = config.get("MAIN_MODEL")

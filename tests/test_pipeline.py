@@ -9,18 +9,27 @@ openai_stub = types.ModuleType('openai')
 openai_stub.Client = object
 sys.modules['openai'] = openai_stub
 
-requests_stub = types.ModuleType('requests')
+if 'requests' in sys.modules:
+    requests_stub = sys.modules['requests']
+else:
+    requests_stub = types.ModuleType('requests')
+    sys.modules['requests'] = requests_stub
 requests_stub.get = lambda url: types.SimpleNamespace(content=b'data')
-sys.modules['requests'] = requests_stub
 
-logger_stub = types.ModuleType('support.logger')
+if 'support.logger' in sys.modules:
+    logger_stub = sys.modules['support.logger']
+else:
+    logger_stub = types.ModuleType('support.logger')
+    sys.modules['support.logger'] = logger_stub
 logger_stub.delog = lambda: (lambda f: f)
-sys.modules['support.logger'] = logger_stub
 
-decorators_stub = types.ModuleType('support.decorators')
+if 'support.decorators' in sys.modules:
+    decorators_stub = sys.modules['support.decorators']
+else:
+    decorators_stub = types.ModuleType('support.decorators')
+    sys.modules['support.decorators'] = decorators_stub
 decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
-sys.modules['support.decorators'] = decorators_stub
 
 import support.functions as f
 
