@@ -40,6 +40,9 @@ examples:
   python pg.py picbystyle -i idea.txt -p "extra details" -s style1 --output_file result.png
   ```
 
+If you omit ``--output_file`` the image is saved inside ``temp/`` with a
+timestamped name like ``010124_120000_style1.png``.
+
 In short, the pipeline is:
 
 1. Generate an idea text with `pg.py idea`.
