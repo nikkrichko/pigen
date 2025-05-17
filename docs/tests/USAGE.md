@@ -21,7 +21,9 @@ The tests verify each step of the pipeline:
 - utility helpers such as saving text or pictures
 
 `tests/test_addstyle.py` covers the helper used by the `addstyle` command and
-checks that duplicate styles are rejected.
+checks that duplicate styles are rejected. `tests/test_decorators.py` validates
+the behaviour of the spinner and execution time decorators defined in
+`decorators.py`.
 
 To try the command manually run:
 
