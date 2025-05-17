@@ -101,7 +101,7 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
     try:
         style_description = styles_map[style_name]["description"]
         style_palette = styles_map[style_name]["palette"]
-    except KeyError as e:
+    except KeyError:
         print(f"Error: Somme issue with style '{style_name}'. \nCheck {FILE_WITH_STYLES} file.")
         exit(1)
         return None

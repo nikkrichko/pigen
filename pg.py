@@ -1,17 +1,14 @@
+import concurrent.futures
+import urllib3
+
 import click
 from openai import OpenAI
 from icecream import ic
 from support import functions as sf
-# Decorators used across CLI commands
 from decorators import spinner_decorator, execution_time_decorator
-# from support.functions import generate_image, save_picture, get_dalle_prompt_based_on_input, execution_time_decorator, save_text_to_file
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
-import support.functions as sf
-import concurrent.futures
-import support.logger as logger
 import support.Configurator as Config
-from support.logger import Logger
+
+urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
 
 
 openAIClient = OpenAI()

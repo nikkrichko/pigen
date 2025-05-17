@@ -50,7 +50,7 @@ yaml_stub = types.ModuleType('yaml')
 yaml_stub.safe_load = lambda *a, **k: {}
 sys.modules['yaml'] = yaml_stub
 
-import pg
+import pg  # noqa: E402
 
 class ShowStylesTests(unittest.TestCase):
     def test_showstyles_lists_names(self):

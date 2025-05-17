@@ -2,7 +2,6 @@ import json
 import os
 import requests
 from openai import OpenAI
-from icecream import ic
 import datetime
 from pprint import pprint as pp
 

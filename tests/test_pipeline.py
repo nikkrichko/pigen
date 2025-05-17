@@ -31,7 +31,7 @@ else:
 decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
 
-import support.functions as f
+import support.functions as f  # noqa: E402
 
 
 class PipelineTests(unittest.TestCase):

@@ -1,4 +1,6 @@
 # __init__.py
 
-from .functions import *
-from .logger import *
+from . import functions
+from . import logger
+
+__all__ = ["functions", "logger"]
