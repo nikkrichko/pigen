@@ -114,12 +114,36 @@ ART_MODEL: "dall-e-3"
 PIC_SIZE: "1024x1024"
 PIC_QUALITY: "Standard"
 ```
-Adjust these values to suit your requirements.
+Adjust these values to suit your requirements. Each option has the following meaning:
+
+- **MAIN_MODEL** – the ChatGPT model used for text prompts. Replace with a GPT‑4 model string
+  if you need higher quality text generation.
+- **ART_MODEL** – the DALL·E model leveraged for image creation.
+- **PIC_SIZE** – output resolution. Valid values include `1024x1024`, `1024x1792` and `1792x1024`.
+- **PIC_QUALITY** – either `Standard` or `hd` to request higher fidelity images.
+- **LOG_LEVEL** – controls the verbosity of the application's logging.
 
 The available art styles are listed in `support/styles.json`. Each style
 contains a description and a color palette. When specifying the `--style`
 argument, use the keys from this file (for example `Classic_Disney` or
 `Anime`).
+
+### Adding Custom Styles
+
+You can extend `support/styles.json` manually or via the `addstyle` command.
+Below is a minimal manual snippet:
+
+```json
+{
+  "Comic_Book": {
+    "description": "Bold ink lines with halftone shading.",
+    "palette": "Strong primaries with black and white"
+  }
+}
+```
+
+After editing the file you can reference the new style with `-s Comic_Book` in
+any of the picture commands.
 
 ## Output Files
 

@@ -1,11 +1,32 @@
 import unittest
 from unittest import mock
 import datetime
+import sys
+import importlib.util
+from pathlib import Path
 
-import decorators
+# Load support.decorators directly to avoid importing the rest of the package
+spec = importlib.util.spec_from_file_location(
+    "support.decorators", Path(__file__).resolve().parents[1] / "support" / "decorators.py"
+)
+decorators = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(decorators)
+sys.modules['support.decorators'] = decorators
 
 
 class DecoratorTests(unittest.TestCase):
+    def setUp(self):
+        # Reload the decorators module in case other tests modified it
+        spec = importlib.util.spec_from_file_location(
+            "support.decorators",
+            Path(__file__).resolve().parents[1] / "support" / "decorators.py",
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sys.modules['support.decorators'] = module
+        global decorators
+        decorators = module
+
     def test_get_random_spinner_list(self):
         fixed_dt = datetime.datetime(2024, 1, 1, 0, 0, 0)
 
@@ -14,8 +35,8 @@ class DecoratorTests(unittest.TestCase):
             def now(cls):
                 return fixed_dt.replace(hour=5)
 
-        with mock.patch('decorators.datetime.datetime', DummyDateTime), \
-             mock.patch('decorators.random.choice', side_effect=lambda seq: seq[0]):
+        with mock.patch.object(decorators.datetime, 'datetime', DummyDateTime), \
+             mock.patch.object(decorators.random, 'choice', side_effect=lambda seq: seq[0]):
             result = decorators._get_random_spinner_list()
 
         expected = []
@@ -33,26 +54,27 @@ class DecoratorTests(unittest.TestCase):
         def sample(x):
             return x + 1
 
-        with mock.patch('decorators._get_random_spinner_list', return_value=['-', '|']), \
-             mock.patch('decorators.time.sleep'), \
-             mock.patch('decorators.sys.stdout'):
+        with mock.patch.object(decorators, '_get_random_spinner_list', return_value=['-', '|']), \
+             mock.patch.object(decorators.time, 'sleep'), \
+             mock.patch.object(decorators.sys, 'stdout'):
             self.assertEqual(sample(1), 2)
 
     def test_execution_time_decorator_prints(self):
-        outputs = []
+        from io import StringIO
+        from contextlib import redirect_stdout
 
-        def fake_print(msg):
-            outputs.append(msg)
+        with mock.patch.object(decorators.time, 'time', side_effect=[0, 1]):
+            buf = StringIO()
+            with redirect_stdout(buf):
+                @decorators.execution_time_decorator
+                def func():
+                    return 'ok'
 
-        with mock.patch('decorators.time.time', side_effect=[0, 1]), \
-             mock.patch('builtins.print', side_effect=fake_print):
-            @decorators.execution_time_decorator
-            def func():
-                return 'ok'
+                self.assertEqual(func(), 'ok')
 
-            self.assertEqual(func(), 'ok')
+            output = buf.getvalue()
 
-        self.assertIn("Execution time for 'func': 1.00 seconds", outputs[0])
+        self.assertIn("Execution time for 'func': 1.00 seconds", output)
 
     def test_log_function_info_and_debug(self):
         class DummyLogger:
@@ -68,7 +90,7 @@ class DecoratorTests(unittest.TestCase):
 
         logger = DummyLogger()
 
-        with mock.patch('decorators.time.time', side_effect=[0, 1]):
+        with mock.patch.object(decorators.time, 'time', side_effect=[0, 1]):
             @decorators.log_function_info_and_debug(logger)
             def func(a, b=1):
                 return a + b

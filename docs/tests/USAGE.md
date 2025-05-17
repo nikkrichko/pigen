@@ -24,7 +24,7 @@ The tests verify each step of the pipeline:
 `tests/test_addstyle.py` covers the helper used by the `addstyle` command and
 checks that duplicate styles are rejected. `tests/test_decorators.py` validates
 the behaviour of the spinner and execution time decorators defined in
-`decorators.py`. `tests/test_showstyles.py` exercises the new ``showstyles``
+`support/decorators.py`. `tests/test_showstyles.py` exercises the new ``showstyles``
 command.
 
 ## Adding Your Own Tests
@@ -33,6 +33,12 @@ Place new test modules inside the ``tests/`` directory. Use Python's ``unittest`
 framework and mimic the existing files for reference. After creating a test
 file, run ``python -m unittest discover -v -s tests`` to ensure everything still
 passes.
+
+When writing tests, stub out external modules such as ``openai`` or ``requests``
+so the suite remains offline and deterministic. The current tests illustrate how
+to replace these modules with simple objects before importing project code.
+Give your test functions descriptive names beginning with ``test_`` and keep
+assertions focused on one behaviour per test.
 
 To try the command manually run:
 

@@ -4,6 +4,8 @@ import threading
 import time
 import datetime
 import random
+import logging
+from functools import wraps
 
 
 def _get_random_spinner_list():
@@ -31,9 +33,9 @@ def _get_random_spinner_list():
     """
     size = datetime.datetime.now().hour
 
-    # get list numbers between 0 and 9 and from all special symbols
-    spec = ['!', '@', '#', '$', '%', '^', '><', '<>', '(o)', '=', '+', ';', ':', '<|>', '{?}', '[A]']
-    wrapper_chars = ['.', '_', '-', '*']
+    # spinner characters and wrappers
+    spec = ['[', '@', '#', '$', '%', '^', 'x', '<', '>', '(o)', '=', '+', ';', ':', '<|>', '{?}', '[A]']
+    wrapper_chars = ['.', '_', '-', '~']
     # get random from list
 
     spinning_sign = random.choice(spec)
@@ -114,3 +116,23 @@ def execution_time_decorator(func):
         return result
 
     return wrapper
+
+
+def log_function_info_and_debug(logger=logging.getLogger()):
+    """Log timing and arguments for a decorated function."""
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            result = func(*args, **kwargs)
+            end_time = time.time()
+            logger.info(
+                f"{func.__name__} - executed in seconds - {end_time - start_time:.6f}"
+            )
+            logger.debug(f"{func.__name__} - args: {args}, kwargs: {kwargs}")
+            return result
+
+        return wrapper
+
+    return decorator

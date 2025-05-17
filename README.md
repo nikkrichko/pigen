@@ -60,6 +60,35 @@ In short, the pipeline is:
 More detailed instructions, including configuration and available styles, can be
 found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
 
+## Configuration
+
+Runtime options are stored in `config.yaml`. Key settings include:
+
+- `MAIN_MODEL` – ChatGPT model used for prompt generation. Switch this to a GPT‑4 model if your
+  account allows it.
+- `ART_MODEL` – DALL·E version for images (currently `dall-e-3`).
+- `PIC_SIZE` – Desired output size such as `1024x1024` or `1792x1024`.
+- `PIC_QUALITY` – Set to `Standard` or `hd` for higher fidelity pictures.
+- `LOG_LEVEL` – Console log verbosity.
+
+Adjust these values to fit your workflow and API quota.
+
+## Extending `styles.json`
+
+The file `support/styles.json` holds all available art styles. Use `pg.py addstyle` to add one
+interactively or edit the JSON manually. A minimal entry looks like:
+
+```json
+{
+  "Comic_Book": {
+    "description": "Bold ink lines with halftone shading.",
+    "palette": "Strong primaries with black and white"
+  }
+}
+```
+
+After saving you can reference the new style with `-s Comic_Book`.
+
 ## Tests
 
 Mock-based tests covering each pipeline step live in the `tests/` folder. See
