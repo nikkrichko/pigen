@@ -34,6 +34,12 @@ framework and mimic the existing files for reference. After creating a test
 file, run ``python -m unittest discover -v -s tests`` to ensure everything still
 passes.
 
+When writing tests, stub out external modules such as ``openai`` or ``requests``
+so the suite remains offline and deterministic. The current tests illustrate how
+to replace these modules with simple objects before importing project code.
+Give your test functions descriptive names beginning with ``test_`` and keep
+assertions focused on one behaviour per test.
+
 To try the command manually run:
 
 ```bash
