@@ -1,51 +1,40 @@
 # pigen
-This repo is oriented for optimizaton of generation pictures for DALLE.
 
-
+Utilities for generating images with OpenAI's DALL·E API. The project provides a
+CLI (`pg.py`) that helps you craft prompts and render pictures in various
+styles.
 
 ## Installation
-1. Clone the repo
-2. Install the requirements
-`pip install -r requirements.txt`
-3. setup YOUR OPENAI API KEY in your environment variables
-for windows:
-### TODO
-`powershell`
-for linux:
-### TODO
-`bash `
 
+1. Clone the repository and enter its folder:
+   ```bash
+   git clone <repo-url>
+   cd pigen
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Set your `OPENAI_API_KEY` environment variable. In a Unix shell use
+   `export OPENAI_API_KEY=<your-key>`.
 
+## Quick Usage
 
-## Usage image generator
+The CLI supports several commands for working with prompts and pictures. A few
+examples:
 
-## Example usage of the 'idea' command
-`python pg.py idea --prompt "Generate a new project idea" --outputfile idea.txt`
+- Generate an idea prompt and save it to a file
+  ```bash
+  python pg.py idea --prompt "Generate a new project idea" --outputfile idea.txt
+  ```
+- Create multiple images using predefined styles
+  ```bash
+  python pg.py multistyle -i idea.txt -s "style1,style2" -o out.png
+  ```
+- Generate a picture in a single style
+  ```bash
+  python pg.py picbystyle -i idea.txt -p "extra details" -s style1 -o result.png
+  ```
 
-Generates an idea based on the provided prompt and saves it to 'idea.txt'
-
-## Example usage of the 'multistyle' command
-`python pg.py multistyle --numOfPictures 5 --numOfRandomStyles 3`
-Generates 5 pictures with 3 random styles applied
-
-`python pg.py multistyle --numOfPictures 3 --listofStyles "style1,style2,style3"
-`
-Generates 3 pictures with specific styles "style1," "style2," and "style3"
-
-## Example usage of the 'picbystyle' command
-`python pg.py picbystyle -i <input_file> -p <prompt> -s <style> -o <output_file>`
-
-Command-Line options:
-
-`-i, --input_file <file_name>` : The input file with the prompt text. This should be a readable file.
-  
-`-p, --prompt <text>` : Additional Prompt text for generating a picture. and fix your initial prompt.
-  
-`-s, --style <style_name>` : Style to apply to the picture.
- 
-`-o, --output_file <file_name>` : The filename where the resulting picture will be saved.
-
-Example of usage
-`python pg.py picbystyle -i prompt.txt -p "Generate a beautiful landscape" -s landscape_style -o output.png`
-
-Generates a picture with the specified style "artistic_style" based on the input prompt from 'input_prompt.txt'
+More detailed instructions, including configuration and available styles, can be
+found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
