@@ -24,7 +24,7 @@ The tests verify each step of the pipeline:
 `tests/test_addstyle.py` covers the helper used by the `addstyle` command and
 checks that duplicate styles are rejected. `tests/test_decorators.py` validates
 the behaviour of the spinner and execution time decorators defined in
-`decorators.py`. `tests/test_showstyles.py` exercises the new ``showstyles``
+`support/decorators.py`. `tests/test_showstyles.py` exercises the new ``showstyles``
 command.
 
 ## Adding Your Own Tests

@@ -3,7 +3,7 @@ from openai import OpenAI
 from icecream import ic
 from support import functions as sf
 # Decorators used across CLI commands
-from decorators import spinner_decorator, execution_time_decorator
+from support.decorators import spinner_decorator, execution_time_decorator
 # from support.functions import generate_image, save_picture, get_dalle_prompt_based_on_input, execution_time_decorator, save_text_to_file
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
