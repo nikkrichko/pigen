@@ -29,11 +29,11 @@ examples:
   ```
 - Create multiple images using predefined styles
   ```bash
-  python pg.py multistyle -i idea.txt -s "style1,style2" -o out.png
+  python pg.py multistyle -i idea.txt -s "style1,style2" --output_file out.png
   ```
 - Generate a picture in a single style
   ```bash
-  python pg.py picbystyle -i idea.txt -p "extra details" -s style1 -o result.png
+  python pg.py picbystyle -i idea.txt -p "extra details" -s style1 --output_file result.png
   ```
 
 In short, the pipeline is:

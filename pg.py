@@ -42,7 +42,7 @@ def cli():
 @cli.command()
 @click.option('-p', '--prompt', default=None, help='Prompt text for generating an idea.')
 @click.option('-i', '--inputfile', default=None, type=click.Path(exists=True), help='Input file with text for generating the idea.')
-@click.option('-0', '--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
+@click.option('-o', '--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
 def idea(prompt, outputfile, inputfile):
     """
     Generate an Idea
