@@ -39,7 +39,7 @@ API. It assumes you already have Python 3 installed and an OpenAI API key.
    Assuming you have an idea prompt saved in `idea.txt`, generate an image
    using one of the styles defined in `support/styles.json`:
    ```bash
-   python pg.py picbystyle -i idea.txt -p "add flying cars" -s Retro_80s -o out.png
+   python pg.py picbystyle -i idea.txt -p "add flying cars" -s Retro_80s --output_file out.png
    ```
    The command combines the text in `idea.txt`, any additional prompt text
    ("add flying cars" in the example) and the `Retro_80s` style to create the
@@ -53,11 +53,11 @@ API. It assumes you already have Python 3 installed and an OpenAI API key.
    tool pick random ones for you:
    ```bash
    python pg.py multistyle -i idea.txt -s "Classic_Disney,Pixel_Art" \
-       -o out.png -w 4
+       --output_file out.png -w 4
    ```
    or to use randomly chosen styles:
    ```bash
-   python pg.py multistyle -i idea.txt -r 3 -o out.png
+   python pg.py multistyle -i idea.txt -r 3 --output_file out.png
    ```
    The images will be saved with timestamps and the style name in the filename.
 
@@ -66,7 +66,7 @@ API. It assumes you already have Python 3 installed and an OpenAI API key.
    If you already have a complete prompt written in a file, you can generate a
    picture without any style adaptation using `picfrompromptfile`:
    ```bash
-   python pg.py picfrompromptfile -i full_prompt.txt -o image.png
+   python pg.py picfrompromptfile -i full_prompt.txt --output_file image.png
    ```
 
 ## Configuration
