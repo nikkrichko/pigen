@@ -438,7 +438,11 @@
     "Zen_Doodle": {
         "description": "Intricate, abstract patterns and shapes, often resembling mandalas or floral designs. Emphasizes meditative, freeform lines and organic forms.",
         "palette": "Black and white, or subdued, calming colors"
-	},
+        },
+    "test": {
+        "description": "this is a test style description",
+        "palette": "orange, blue"
+    },
   "Erotic": {
         "description": "Erotic art explores the beauty and sensuality of the human form in an intimate and passionate manner. It celebrates the expressions of desire, love, and passion through visual storytelling. The focus is on capturing the nuances of the human body, its curves, lines, and the emotions it conveys during moments of intense intimacy. The art form aims to evoke a deep sense of allure and connection between the depicted subjects. While it can be explicit in its portrayal, it does not cross into explicit adult content or pornography. Instead, it creates an atmosphere where desire and sensuality are celebrated as a natural part of the human experience.",
         "palette": "The palette for erotic art includes rich, passionate reds that symbolize desire and love, deep, dark hues that add an air of mystery and intensity, and soft, intimate skin tones that accentuate the beauty of the human form. While explicit nudity is not the focus, it may occasionally include tasteful depictions of nudity to enhance the sensuality of the artwork. It avoids explicit sexual content or any form of explicit adult imagery, adhering to artistic and tasteful representation."

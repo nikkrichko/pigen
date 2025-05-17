@@ -20,3 +20,15 @@ The tests verify each step of the pipeline:
 - image generation
 - utility helpers such as saving text or pictures
 
+`tests/test_addstyle.py` covers the helper used by the `addstyle` command and
+checks that duplicate styles are rejected.
+
+To try the command manually run:
+
+```bash
+python pg.py addstyle -n test -d "this is a test style description" -p "orange, blue"
+```
+
+Open `support/styles.json` and verify a new `"test"` entry exists. Remove that
+block from the file to clean up if you no longer need the example.
+

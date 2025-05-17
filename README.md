@@ -39,6 +39,10 @@ examples:
   ```bash
   python pg.py picbystyle -i idea.txt -p "extra details" -s style1 --output_file result.png
   ```
+- Add a new style to the styles file
+  ```bash
+  python pg.py addstyle -n test -d "this is a test style description" -p "orange, blue"
+  ```
 
 If you omit ``--output_file`` the image is saved inside ``temp/`` with a
 timestamped name like ``010124_120000_style1.png``.
@@ -56,3 +60,5 @@ found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
 
 Mock-based tests covering each pipeline step live in the `tests/` folder. See
 [docs/tests/USAGE.md](docs/tests/USAGE.md) for instructions on running them.
+The `test_addstyle.py` module ensures the `addstyle` command works as expected
+and demonstrates how to add and remove a sample style entry.

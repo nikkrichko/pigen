@@ -330,6 +330,33 @@ def replace_last_path_part_with_datetime(file_path, style=""):
     return new_file_path
 
 
+def add_style_to_file(name: str, description: str, palette: str, file_path: str = FILE_WITH_STYLES) -> None:
+    """Add a new style entry to the styles file.
+
+    Parameters
+    ----------
+    name: str
+        Name of the style to add.
+    description: str
+        Text description of the style.
+    palette: str
+        Color palette description for the style.
+    file_path: str, optional
+        Path to the JSON file storing styles.
+    """
+    with open(file_path, "r", encoding="utf-8") as fh:
+        styles = json.load(fh)
+
+    if name in styles:
+        raise ValueError(f"Style '{name}' already exists.")
+
+    styles[name] = {"description": description, "palette": palette}
+
+    with open(file_path, "w", encoding="utf-8") as fh:
+        json.dump(styles, fh, indent=4, ensure_ascii=False)
+
+        
+    
 def default_output_file(style: str, extension: str = ".png") -> str:
     """Return a default output file path for a generated image.
 
@@ -355,5 +382,6 @@ def default_output_file(style: str, extension: str = ".png") -> str:
     style_part = f"_{style}" if style else ""
     file_name = f"{current_datetime}{style_part}{extension}"
     return os.path.join(TEMP_DIR, file_name)
+
 
 
