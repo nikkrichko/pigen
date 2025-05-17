@@ -1,5 +1,9 @@
 # pigen
 
+## TL;DR
+Generate image prompts and pictures with OpenAI's DALL·E API using a simple
+command-line tool.
+
 Utilities for generating images with OpenAI's DALL·E API. The project provides a
 CLI (`pg.py`) that helps you craft prompts and render pictures in various
 styles.
