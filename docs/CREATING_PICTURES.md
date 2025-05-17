@@ -4,6 +4,29 @@ This guide explains how to use the command line interface provided by the
 `pigen` project to generate images with different styles using OpenAI's
 API. It assumes you already have Python 3 installed and an OpenAI API key.
 
+## Pipeline Overview
+
+The tool follows a simple pipeline to transform your idea into a finished
+picture. Understanding each stage will help you customize the results:
+
+1. **Idea Generation** – Using the `idea` command, a short concept is
+   expanded into a detailed description. The helper function
+   `generate_and_save_idea` (defined in `support/functions.py`) sends your
+   prompt to ChatGPT and saves the response to a file.
+2. **Prompt Adoption** – Commands such as `picbystyle` and `multistyle`
+   read the idea file and adapt it to a specific style. The
+   `generate_adopted_prompt` function merges the idea with a style
+   description and palette from `support/styles.json` to build a DALL·E
+   compliant prompt.
+3. **Image Generation** – The adopted prompt is passed to DALL·E through
+   `generate_image`. This function requests the final image and the result
+   is written to disk via `save_picture`.
+4. **Review Outputs** – Intermediate prompts are stored in the `temp`
+   directory. Generated images receive timestamps so you can easily track
+   different versions.
+
+The next sections walk through the commands that orchestrate these steps.
+
 ## Installation
 
 1. Clone the repository and change into its directory:
