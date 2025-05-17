@@ -48,3 +48,8 @@ In short, the pipeline is:
 
 More detailed instructions, including configuration and available styles, can be
 found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
+
+## Tests
+
+Mock-based tests covering each pipeline step live in the `tests/` folder. See
+[docs/tests/USAGE.md](docs/tests/USAGE.md) for instructions on running them.
