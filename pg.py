@@ -103,7 +103,10 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
         output_file_path = sf.replace_last_path_part_with_datetime(output_adopted_prompt_file, style)
         sf.save_text_to_file(adopted_prompt, output_file_path)
         image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
-        output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+        if output_file:
+            output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+        else:
+            output_file = sf.default_output_file(style)
         sf.save_picture(output_file, image)
 
         return adopted_prompt
@@ -141,7 +144,10 @@ def picByStyle(input_file, prompt, style, output_file):
     adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
 
     image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
-    output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+    if output_file:
+        output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+    else:
+        output_file = sf.default_output_file(style)
     sf.save_picture(output_file, image)
     click.echo(f'Picture generated with style "{style}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
@@ -153,7 +159,10 @@ def picByStyle(input_file, prompt, style, output_file):
 def picFromPromptFile(input_file, output_file):
     initial_idea_prompt = input_file.read()
     image = sf.generate_image(initial_idea_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
-    output_file = sf.replace_last_path_part_with_datetime(output_file, "")
+    if output_file:
+        output_file = sf.replace_last_path_part_with_datetime(output_file, "")
+    else:
+        output_file = sf.default_output_file("")
     sf.save_picture(output_file, image)
     click.echo(f'Picture generated from file "{input_file}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
