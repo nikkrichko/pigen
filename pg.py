@@ -82,6 +82,8 @@ def idea(prompt, outputfile, inputfile):
 @click.option('-w', '--workers_num', type=int, default=3, help='Number of workers to use for parallel execution.')
 def multistyle(input_file, style, output_file, workers_num, random_num):
     # Implement logic to generate pictures with specified styles
+    if not output_file:
+        output_file = sf.get_temp_output_filepath()
     if random_num != 0 and style is not None:
         raise Exception("You can't specify both random_num and list_of_styles. Please specify only one of them.")
 
@@ -136,6 +138,8 @@ def picByStyle(input_file, prompt, style, output_file):
     Example usage:
     picByStyle(open('prompt.txt', 'r'), "Generate a beautiful landscape", "landscape_style", "output.png")
     """
+    if not output_file:
+        output_file = sf.get_temp_output_filepath()
     initial_idea_prompt = input_file.read()
     additional_user_prompt = prompt
     adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
@@ -151,6 +155,8 @@ def picByStyle(input_file, prompt, style, output_file):
 @click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
 @click.option('-o', '--output_file', type=str, help='Where to save picture')
 def picFromPromptFile(input_file, output_file):
+    if not output_file:
+        output_file = sf.get_temp_output_filepath()
     initial_idea_prompt = input_file.read()
     image = sf.generate_image(initial_idea_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
     output_file = sf.replace_last_path_part_with_datetime(output_file, "")

@@ -329,3 +329,14 @@ def replace_last_path_part_with_datetime(file_path, style=""):
     return new_file_path
 
 
+def get_temp_output_filepath():
+    """Return a path for a temporary output image.
+
+    Creates the ``temp`` directory if it doesn't exist and returns a file
+    path in the form ``temp/output_DDMMYY_HHMMSS.png``.
+    """
+    os.makedirs("temp", exist_ok=True)
+    timestamp = datetime.datetime.now().strftime("%d%m%y_%H%M%S")
+    return os.path.join("temp", f"output_{timestamp}.png")
+
+
