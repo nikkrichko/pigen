@@ -1,14 +1,15 @@
-import random
-from typing import Any
-import openai
+import base64
+import datetime
 import json
 import os
-import requests
-import datetime
+import random
 import sys
+from typing import Any
+
+import openai
+
 from support.decorators import spinner_decorator, execution_time_decorator
 from support.logger import delog
-import base64
 
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
@@ -127,11 +128,11 @@ def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,o
     return adopted_prompt
 
 @execution_time_decorator
-def get_dalle_prompt_based_on_input(OpenAIclient, input_prompt, model_to_chat):
+def get_dalle_prompt_based_on_input(openAIclient, input_prompt, model_to_chat):
     role = """As a Prompt Generator Specialist for DALL·E, you will craft detailed prompts that translate user ideas into vivid, DALL·E-compliant visual concepts, demanding creativity and an understanding of artistic styles. Your role involves refining prompts for accuracy, integrating various artistic elements, and ensuring they adhere to content guidelines. Collaboration with users to fine-tune their visions and enhance their experience with DALL·E is key. You'll analyze feedback from generated images to improve prompt effectiveness and educate users on creating impactful prompts. This position requires strong creative skills, language proficiency, and a good grasp of DALL·E's capabilities, offering a unique blend of art and technology."""
     print("\tGetting response from DALLE prompt generator ...")
     input_prompt = role + "\n here is user idea you need to improve and get ideal prompt" + input_prompt
-    response_msg = get_prompt_result(OpenAIclient, input_prompt, role, model_to_chat)
+    response_msg = get_prompt_result(openAIclient, input_prompt, role, model_to_chat)
     return response_msg
 
 
