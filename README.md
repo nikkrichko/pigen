@@ -39,6 +39,10 @@ examples:
   ```bash
   python pg.py picbystyle -i idea.txt -p "extra details" -s style1 --output_file result.png
   ```
+- Add a new style to the styles file
+  ```bash
+  python pg.py addstyle -n MyStyle -d "Short description"
+  ```
 
 In short, the pipeline is:
 
