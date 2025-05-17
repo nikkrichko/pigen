@@ -105,10 +105,11 @@ class PipelineTests(unittest.TestCase):
             import tempfile
             with tempfile.TemporaryDirectory() as tmpdir:
                 path = f"{tmpdir}/idea.txt"
-                f.generate_and_save_idea("prompt text", path, object(), "gpt")
+                result = f.generate_and_save_idea("prompt text", path, object(), "gpt")
                 self.assertEqual(calls["prompt"], "prompt text")
                 self.assertEqual(calls["model"], "gpt")
                 self.assertEqual(saved[path], "final idea")
+                self.assertEqual(result, "final idea")
 
     def test_generate_adopted_prompt(self):
         with mock.patch.object(f, "adopt_style", lambda base, style, add: "styled"), \
@@ -144,6 +145,36 @@ class PipelineTests(unittest.TestCase):
             f.save_picture(path, b"abc")
             with open(path, "rb") as fh:
                 self.assertEqual(fh.read(), b"abc")
+
+    def test_log_prompt_output(self):
+        fixed_dt = datetime.datetime(2024, 1, 1, 12, 0, 0)
+
+        class DummyDateTime(datetime.datetime):
+            @classmethod
+            def now(cls):
+                return fixed_dt
+
+        orig = f.datetime.datetime
+        f.datetime.datetime = DummyDateTime
+        import tempfile
+        import os
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                cwd = os.getcwd()
+                os.chdir(tmpdir)
+                try:
+                    rel_path = f.log_prompt_output("idea", "p", "o")
+                    log_path = os.path.join(tmpdir, rel_path)
+                finally:
+                    os.chdir(cwd)
+                with open(log_path) as fh:
+                    content = fh.read()
+                self.assertIn("prompt:", content)
+                self.assertIn("output:", content)
+                self.assertIn("p", content)
+                self.assertIn("o", content)
+        finally:
+            f.datetime.datetime = orig
 
 
 if __name__ == "__main__":
