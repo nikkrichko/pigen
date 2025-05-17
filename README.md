@@ -43,6 +43,10 @@ examples:
   ```bash
   python pg.py addstyle -n test -d "this is a test style description" -p "orange, blue"
   ```
+- Show available styles
+  ```bash
+  python pg.py showstyles
+  ```
 
 If you omit ``--output_file`` the image is saved inside ``temp/`` with a
 timestamped name like ``010124_120000_style1.png``.

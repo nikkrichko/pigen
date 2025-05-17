@@ -191,6 +191,23 @@ def addstyle(name, description, palette):
         raise click.ClickException(str(exc))
     click.echo(f'Style "{name}" added to styles file.')
 
+
+@cli.command()
+@click.option('-d', '--description', 'show_desc', is_flag=True,
+              help='Display style descriptions.')
+@click.option('-p', '--palette', 'show_palette', is_flag=True,
+              help='Display palette information.')
+def showstyles(show_desc, show_palette):
+    """Print available styles."""
+    styles = sf.load_styles()
+    for name, info in styles.items():
+        click.echo(f'Style: {name}')
+        if show_desc:
+            click.echo(f'  Description: {info.get("description", "")}')
+        if show_palette:
+            click.echo(f'  Palette: {info.get("palette", "")}')
+        click.echo('')
+
 if __name__ == '__main__':
     config = Config.Config()
     model_to_chat = config.get("MAIN_MODEL")

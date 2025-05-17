@@ -86,7 +86,15 @@ The next sections walk through the commands that orchestrate these steps.
    If ``--output_file`` is omitted they are written to the ``temp`` directory
    with names like ``010124_120000_Retro_80s.png``.
 
-4. **Use an Idea File Directly**
+4. **Show Available Styles**
+
+   View all style names stored in ``support/styles.json``. Add ``-d`` to include
+   descriptions and ``-p`` to display palettes.
+   ```bash
+   python pg.py showstyles -d -p
+   ```
+
+5. **Use an Idea File Directly**
 
    If you already have a complete prompt written in a file, you can generate a
    picture without any style adaptation using `picfrompromptfile`:
