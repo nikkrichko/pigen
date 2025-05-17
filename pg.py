@@ -68,7 +68,8 @@ def idea(prompt, outputfile, inputfile):
 
     print("\tGenerating prompt based on idea ...")
 
-    sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
+    result = sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
+    sf.log_prompt_output("idea", text_prompt, result)
     click.echo(f'Idea generated and saved to {outputfile}.')
 
 
@@ -108,6 +109,7 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
         else:
             output_file = sf.default_output_file(style)
         sf.save_picture(output_file, image)
+        sf.log_prompt_output("multistyle", adopted_prompt, output_file)
 
         return adopted_prompt
 
@@ -149,6 +151,7 @@ def picByStyle(input_file, prompt, style, output_file):
     else:
         output_file = sf.default_output_file(style)
     sf.save_picture(output_file, image)
+    sf.log_prompt_output("picbystyle", adopted_prompt, output_file)
     click.echo(f'Picture generated with style "{style}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
 

@@ -149,6 +149,7 @@ def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
     idea_text = generate_idea(prompt)
     response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat=model_to_chat, gpt_role ="")
     save_text_to_file(response_msg, outputfile)
+    return response_msg
 
 def generate_idea(prompt):
     # Implement idea generation logic
@@ -382,6 +383,40 @@ def default_output_file(style: str, extension: str = ".png") -> str:
     style_part = f"_{style}" if style else ""
     file_name = f"{current_datetime}{style_part}{extension}"
     return os.path.join(TEMP_DIR, file_name)
+
+
+def log_prompt_output(command_name: str, prompt_text: str, output_text: str) -> str:
+    """Log a prompt and its output to a YAML file.
+
+    Parameters
+    ----------
+    command_name: str
+        Name of the CLI command being executed.
+    prompt_text: str
+        Prompt text that was provided to the command.
+    output_text: str
+        The textual result or output file path produced by the command.
+
+    Returns
+    -------
+    str
+        Path to the created YAML log file.
+    """
+
+    now = datetime.datetime.now()
+    date_part = now.strftime("%d%m%y")
+    time_part = now.strftime("%H%M%S")
+    base_dir = os.path.join("log", command_name, date_part)
+    os.makedirs(base_dir, exist_ok=True)
+    log_file = os.path.join(base_dir, f"{date_part}_{time_part}_{command_name}.yaml")
+
+    prompt_block = str(prompt_text).replace("\n", "\n  ")
+    output_block = str(output_text).replace("\n", "\n  ")
+    content = f"prompt: |\n  {prompt_block}\noutput: |\n  {output_block}\n"
+    with open(log_file, "w", encoding="utf-8") as fh:
+        fh.write(content)
+
+    return log_file
 
 
 
