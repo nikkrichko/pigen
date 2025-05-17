@@ -36,5 +36,11 @@ examples:
   python pg.py picbystyle -i idea.txt -p "extra details" -s style1 -o result.png
   ```
 
+In short, the pipeline is:
+
+1. Generate an idea text with `pg.py idea`.
+2. Apply one or more styles using `picbystyle` or `multistyle`.
+3. The final prompt is sent to DALL·E and the image is saved with a timestamp.
+
 More detailed instructions, including configuration and available styles, can be
 found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
