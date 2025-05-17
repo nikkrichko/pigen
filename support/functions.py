@@ -359,6 +359,12 @@ def add_style_to_file(name: str, description: str, palette: str, file_path: str 
     with open(file_path, "w", encoding="utf-8") as fh:
         json.dump(styles, fh, indent=4, ensure_ascii=False)
 
+
+def load_styles(file_path: str = FILE_WITH_STYLES) -> dict:
+    """Return all styles from ``file_path`` as a dictionary."""
+    with open(file_path, "r", encoding="utf-8") as fh:
+        return json.load(fh)
+
         
     
 def default_output_file(style: str, extension: str = ".png") -> str:

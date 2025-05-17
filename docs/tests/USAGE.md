@@ -19,11 +19,20 @@ The tests verify each step of the pipeline:
 - adoption of styles and prompt preparation
 - image generation
 - utility helpers such as saving text or pictures
+- style listing via the ``showstyles`` command
 
 `tests/test_addstyle.py` covers the helper used by the `addstyle` command and
 checks that duplicate styles are rejected. `tests/test_decorators.py` validates
 the behaviour of the spinner and execution time decorators defined in
-`decorators.py`.
+`decorators.py`. `tests/test_showstyles.py` exercises the new ``showstyles``
+command.
+
+## Adding Your Own Tests
+
+Place new test modules inside the ``tests/`` directory. Use Python's ``unittest``
+framework and mimic the existing files for reference. After creating a test
+file, run ``python -m unittest discover -v -s tests`` to ensure everything still
+passes.
 
 To try the command manually run:
 
