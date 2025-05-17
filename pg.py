@@ -40,13 +40,12 @@ def cli():
     """CLI Application for Various Tasks"""
     pass
 
-
+@execution_time_decorator
+@spinner_decorator
 @cli.command()
 @click.option('-p', '--prompt', default=None, help='Prompt text for generating an idea.')
 @click.option('-i', '--inputfile', default=None, type=click.Path(exists=True), help='Input file with text for generating the idea.')
 @click.option('-o', '--outputfile', required=True, type=click.Path(), help='Output file to save the generated idea.')
-@execution_time_decorator
-@spinner_decorator
 def idea(prompt, outputfile, inputfile):
     """
     Generate an Idea
@@ -85,8 +84,7 @@ def idea(prompt, outputfile, inputfile):
 @click.option('-r', '--random_num', type=int, default=0, help='Generate number of different random styles')
 @click.option('-o', '--output_file', type=str, help='Where to save picture')
 @click.option('-w', '--workers_num', type=int, default=3, help='Number of workers to use for parallel execution.')
-@execution_time_decorator
-@spinner_decorator
+
 def multistyle(input_file, style, output_file, workers_num, random_num):
     # Implement logic to generate pictures with specified styles
     if random_num != 0 and style is not None:
@@ -125,14 +123,13 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
 
     pass
 
-
+@execution_time_decorator
+@spinner_decorator
 @cli.command()
 @click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
 @click.option('-p', '--prompt', type=str, help='Additional Prompt text for generating a picture.')
 @click.option('-s', '--style', type=str, help='Style to apply to the picture.')
 @click.option('-o', '--output_file', type=str, help='Where to save picture')
-@execution_time_decorator
-@spinner_decorator
 def picByStyle(input_file, prompt, style, output_file):
     """
     This method generates a picture based on a given style and prompt text.

@@ -8,7 +8,7 @@ import datetime
 import sys
 from support.decorators import spinner_decorator, execution_time_decorator
 from support.logger import delog
-
+import base64
 
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
@@ -20,19 +20,28 @@ TEMP_DIR = "temp"
 
 @execution_time_decorator
 @spinner_decorator
-def generate_image(picture_prompt, openai_client, model="dall-e-3", size="1024x1024", quality="standard", num_of_pics=1):
+def generate_image(picture_prompt, openai_client, model="gpt-image-1", size="1024x1024", quality="standard", num_of_pics=1):
     global response
     print("\tGenerating image ...")
-    response = openai_client.images.generate(
+    # response = openai_client.images.generate(
+    #     model=model,
+    #     prompt=picture_prompt,
+    #     size=size,
+    #     quality=quality,
+    #     n=num_of_pics,
+    # )
+    # image_url = response.data[0].url
+    # bin_picture = requests.get(image_url)
+    img = openai_client.images.generate(
         model=model,
         prompt=picture_prompt,
-        size=size,
-        quality=quality,
         n=num_of_pics,
+        size=size
     )
-    image_url = response.data[0].url
-    bin_picture = requests.get(image_url)
-    return bin_picture.content
+
+    image_bytes = base64.b64decode(img.data[0].b64_json)
+
+    return image_bytes
 
 def save_picture(file_name, picture):
     print("\t\tsaving image ...")
