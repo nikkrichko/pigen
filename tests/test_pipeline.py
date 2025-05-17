@@ -61,6 +61,27 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(result.endswith("_Style_file.txt"))
         self.assertIn("2024-01-01_12-00-00", result)
 
+    def test_default_output_file(self):
+        fixed_dt = datetime.datetime(2024, 1, 1, 12, 0, 0)
+
+        class DummyDateTime(datetime.datetime):
+            @classmethod
+            def now(cls):
+                return fixed_dt
+
+        orig = f.datetime.datetime
+        f.datetime.datetime = DummyDateTime
+        try:
+            import tempfile
+            import os
+            with tempfile.TemporaryDirectory() as tmpdir:
+                with mock.patch.object(f, "TEMP_DIR", tmpdir):
+                    result = f.default_output_file("Style")
+                    expected = os.path.join(tmpdir, "010124_120000_Style.png")
+                    self.assertEqual(result, expected)
+        finally:
+            f.datetime.datetime = orig
+
     def test_generate_and_save_idea(self):
         calls = {}
 

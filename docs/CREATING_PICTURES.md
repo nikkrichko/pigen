@@ -83,6 +83,8 @@ The next sections walk through the commands that orchestrate these steps.
    python pg.py multistyle -i idea.txt -r 3 --output_file out.png
    ```
    The images will be saved with timestamps and the style name in the filename.
+   If ``--output_file`` is omitted they are written to the ``temp`` directory
+   with names like ``010124_120000_Retro_80s.png``.
 
 4. **Use an Idea File Directly**
 
@@ -91,6 +93,8 @@ The next sections walk through the commands that orchestrate these steps.
    ```bash
    python pg.py picfrompromptfile -i full_prompt.txt --output_file image.png
    ```
+   When no ``--output_file`` is specified, the picture is placed in ``temp/``
+   using a timestamped name such as ``010124_120000.png``.
 
 ## Configuration
 

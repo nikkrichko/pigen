@@ -12,6 +12,7 @@ from support.logger import delog
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
 FILE_WITH_STYLES = 'support/styles.json'
+TEMP_DIR = "temp"
 
 
 # Define the decorator
@@ -353,5 +354,34 @@ def add_style_to_file(name: str, description: str, palette: str, file_path: str 
 
     with open(file_path, "w", encoding="utf-8") as fh:
         json.dump(styles, fh, indent=4, ensure_ascii=False)
+
+        
+    
+def default_output_file(style: str, extension: str = ".png") -> str:
+    """Return a default output file path for a generated image.
+
+    The path points inside ``TEMP_DIR`` which will be created if it does not
+    exist. The filename is composed from the current date/time and the style
+    name using the ``ddmmyy_HHMMSS`` format, e.g. ``010124_120000_Anime.png``.
+
+    Parameters
+    ----------
+    style: str
+        Style name to include in the filename.
+    extension: str, optional
+        File extension (including the leading dot). ``.png`` by default.
+
+    Returns
+    -------
+    str
+        Full path to the default output file.
+    """
+
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    current_datetime = datetime.datetime.now().strftime("%d%m%y_%H%M%S")
+    style_part = f"_{style}" if style else ""
+    file_name = f"{current_datetime}{style_part}{extension}"
+    return os.path.join(TEMP_DIR, file_name)
+
 
 
