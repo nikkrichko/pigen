@@ -5,6 +5,7 @@ import json
 import os
 import requests
 import datetime
+import sys
 from support.decorators import spinner_decorator, execution_time_decorator
 from support.logger import delog
 
@@ -132,13 +133,15 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
         completion = OpenAIclient.chat.completions.create(
             model=model_to_chat,
             messages=[
-                {"role": "assistant",
-                 "content": input_prompt}
+                {"role": "assistant", "content": input_prompt}
             ]
         )
+    except getattr(openai, "APIConnectionError", Exception) as e:
+        print(f"Connection error when communicating with OpenAI: {e}")
+        sys.exit(1)
     except Exception as e:
         print(f"Error during the request to OpenAI API: {e}")
-        return None
+        sys.exit(1)
 
     response_msg = completion.choices[0].message.content
     return response_msg
