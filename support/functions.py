@@ -4,12 +4,12 @@ import json
 import os
 import random
 import sys
-from typing import Any
+from typing import Any, Dict, List, Optional, Union
 
 import openai
 
-from support.decorators import spinner_decorator, execution_time_decorator
-from support.logger import delog
+from support.decorators import spinner_decorator, execution_time_decorator, log_function_info_and_debug
+from support.logger import delog, Logger
 
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
@@ -183,7 +183,7 @@ def generate_idea(prompt):
         Each main elements hshold have own sections and onw categories of description.
         Each element of the resulted prompt should have own category and it should be easy to modify it. Split prompt to sections, as much as possible sections. 
         Each category and sub category should easy to separete and modify. Better more categories with less details than less categories with more details.
-        
+
 
         requirements to answer:
         It should be only prompt. Ensure there are no any other comments to the prompt. nor any comment in the beginning neither in the end.
@@ -208,7 +208,7 @@ def generate_idea(prompt):
     - Props
     - Environmental Elements
 	- Other Objects
-	
+
   - Perspective and Composition:
     - Viewing Angle
     - Composition Style
@@ -312,9 +312,9 @@ def generate_idea(prompt):
   - Crowd and Activities:
     - Size of the Crowd
     - Activities and Interactions
-        
-        
-        
+
+
+
 """
 
 
@@ -375,8 +375,8 @@ def load_styles(file_path: str = FILE_WITH_STYLES) -> dict:
     with open(file_path, "r", encoding="utf-8") as fh:
         return json.load(fh)
 
-        
-    
+
+
 def default_output_file(style: str, extension: str = ".png") -> str:
     """Return a default output file path for a generated image.
 
@@ -438,4 +438,322 @@ def log_prompt_output(command_name: str, prompt_text: str, output_text: str) -> 
     return log_file
 
 
+# Functions for the ill_story command
 
+@log_function_info_and_debug(Logger().logger)
+def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[str, Any]:
+    """
+    Validates if the input text is a story and not technical text.
+
+    This function sends a request to the OpenAI API to determine if the input text
+    is a narrative story that can be illustrated, and if it contains enough content
+    to generate the requested number of scenes.
+
+    Parameters
+    ----------
+    text : str
+        The input text to validate
+    openai_client : openai.Client
+        The OpenAI client to use for the API request
+    model : str
+        The model to use for the API request
+
+    Returns
+    -------
+    Dict[str, Any]
+        A dictionary containing the validation results:
+        - is_story: bool - Whether the input is a story
+        - reason: str - Explanation of the validation result
+        - estimated_scenes: int - Estimated number of scenes that can be generated
+    """
+    prompt = f"""
+    Analyze the following text and determine if it's a narrative story that can be illustrated.
+
+    Text to analyze:
+    {text}
+
+    Please evaluate:
+    1. Is this a narrative story (not technical text, documentation, code, etc.)?
+    2. Does it have characters, settings, and plot elements that could be illustrated?
+    3. Approximately how many distinct scenes could be illustrated from this text?
+
+    Respond in JSON format with the following structure:
+    {{
+        "is_story": true/false,
+        "reason": "Brief explanation of your decision",
+        "estimated_scenes": number (approximate number of distinct scenes that could be illustrated)
+    }}
+    """
+
+    try:
+        completion = openai_client.chat.completions.create(
+            model=model,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": "You are a literary analyst who specializes in determining if text contains narrative elements suitable for illustration."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        response = json.loads(completion.choices[0].message.content)
+        return response
+    except Exception as e:
+        print(f"Error validating story: {e}")
+        return {
+            "is_story": False,
+            "reason": f"Error during validation: {str(e)}",
+            "estimated_scenes": 0
+        }
+
+
+@log_function_info_and_debug(Logger().logger)
+def extract_characters(text: str, openai_client: openai.Client, model: str) -> Dict[str, Dict[str, str]]:
+    """
+    Extracts characters and their appearances from a story.
+
+    This function sends a request to the OpenAI API to identify all characters
+    in the story and generate detailed descriptions of their appearances.
+
+    Parameters
+    ----------
+    text : str
+        The story text to analyze
+    openai_client : openai.Client
+        The OpenAI client to use for the API request
+    model : str
+        The model to use for the API request
+
+    Returns
+    -------
+    Dict[str, Dict[str, str]]
+        A dictionary where keys are character names and values are dictionaries
+        containing appearance details
+    """
+    prompt = f"""
+    Analyze the following story and identify all characters. For each character, provide a detailed description
+    of their physical appearance, clothing, and any distinctive features.
+
+    Story:
+    {text}
+
+    For each character, extract:
+    1. Physical appearance (age, height, build, hair, eyes, etc.)
+    2. Clothing and accessories
+    3. Distinctive features or characteristics
+    4. Any other visual details mentioned in the text
+
+    If details aren't explicitly mentioned in the text, make reasonable inferences based on the character's role,
+    time period, setting, and other contextual clues. Always respond in English regardless of the input language.
+
+    Respond in JSON format with character names as keys and appearance details as nested objects:
+    {{
+        "Character Name": {{
+            "physical_appearance": "Detailed description...",
+            "clothing": "Detailed description...",
+            "distinctive_features": "Detailed description..."
+        }},
+        ...
+    }}
+    """
+
+    try:
+        completion = openai_client.chat.completions.create(
+            model=model,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": "You are a character analyst who specializes in extracting detailed visual descriptions of characters from narrative text."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        response = json.loads(completion.choices[0].message.content)
+        return response
+    except Exception as e:
+        print(f"Error extracting characters: {e}")
+        return {}
+
+
+@log_function_info_and_debug(Logger().logger)
+def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, str]], 
+                   openai_client: openai.Client, model: str) -> List[Dict[str, Any]]:
+    """
+    Generates a list of scenes from a story.
+
+    This function sends a request to the OpenAI API to identify key scenes from the story
+    and generate detailed descriptions for each scene, including which characters are present.
+
+    Parameters
+    ----------
+    text : str
+        The story text to analyze
+    num_scenes : int
+        The number of scenes to generate
+    characters : Dict[str, Dict[str, str]]
+        Dictionary of characters and their appearances
+    openai_client : openai.Client
+        The OpenAI client to use for the API request
+    model : str
+        The model to use for the API request
+
+    Returns
+    -------
+    List[Dict[str, Any]]
+        A list of dictionaries, each representing a scene with description and characters
+    """
+    character_names = list(characters.keys())
+    character_names_str = ", ".join(character_names)
+
+    prompt = f"""
+    Analyze the following story and identify {num_scenes} key scenes that would be most suitable for illustration.
+
+    Story:
+    {text}
+
+    Known characters: {character_names_str}
+
+    For each scene, provide:
+    1. A detailed visual description of the scene
+    2. The list of characters present in the scene
+    3. The setting and environment details
+    4. Any important objects or props
+
+    Focus on visually interesting and significant moments in the story. Always respond in English regardless of the input language.
+
+    Respond in JSON format as an array of scene objects:
+    [
+        {{
+            "scene_number": 1,
+            "description": "Detailed visual description of the scene...",
+            "characters": ["Character1", "Character2", ...],
+            "setting": "Description of the setting...",
+            "objects": ["Object1", "Object2", ...]
+        }},
+        ...
+    ]
+
+    Ensure you generate exactly {num_scenes} scenes, or fewer if the story doesn't contain enough distinct scenes.
+    """
+
+    try:
+        completion = openai_client.chat.completions.create(
+            model=model,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": "You are a scene analyst who specializes in identifying key visual moments from narrative text."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        response = json.loads(completion.choices[0].message.content)
+        return response.get("scenes", []) if isinstance(response, dict) else response
+    except Exception as e:
+        print(f"Error generating scenes: {e}")
+        return []
+
+
+@log_function_info_and_debug(Logger().logger)
+def create_story_illustration_json(story_text: str, characters: Dict[str, Dict[str, str]], 
+                                  scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Creates a structured JSON object containing the story illustration data.
+
+    Parameters
+    ----------
+    story_text : str
+        The original story text
+    characters : Dict[str, Dict[str, str]]
+        Dictionary of characters and their appearances
+    scenes : List[Dict[str, Any]]
+        List of scenes generated from the story
+
+    Returns
+    -------
+    Dict[str, Any]
+        A structured JSON object containing all the story illustration data
+    """
+    # Create a summary of the story (first 200 characters)
+    story_summary = story_text[:200] + "..." if len(story_text) > 200 else story_text
+
+    # Create the JSON structure
+    result = {
+        "story_summary": story_summary,
+        "characters": characters,
+        "scenes": scenes,
+        "metadata": {
+            "generated_at": datetime.datetime.now().isoformat(),
+            "num_scenes": len(scenes),
+            "num_characters": len(characters)
+        }
+    }
+
+    return result
+
+
+@log_function_info_and_debug(Logger().logger)
+def illustrate_story(story_text: str, output_file: str, num_scenes: int, 
+                    openai_client: openai.Client, model: str) -> Optional[str]:
+    """
+    Main function to illustrate a story by generating character descriptions and scenes.
+
+    This function orchestrates the entire process of validating the story, extracting characters,
+    generating scenes, and creating the final JSON output.
+
+    Parameters
+    ----------
+    story_text : str
+        The story text to illustrate
+    output_file : str
+        Path to save the output JSON file
+    num_scenes : int
+        Number of scenes to generate
+    openai_client : openai.Client
+        The OpenAI client to use for API requests
+    model : str
+        The model to use for API requests
+
+    Returns
+    -------
+    Optional[str]
+        Path to the output file if successful, None otherwise
+    """
+    logger = Logger()
+    logger.log(f"Starting story illustration process for {len(story_text)} characters of text")
+
+    # Step 1: Validate the story
+    validation = validate_story(story_text, openai_client, model)
+    if not validation.get("is_story", False):
+        logger.log(f"Validation failed: {validation.get('reason', 'Unknown reason')}")
+        return None
+
+    estimated_scenes = validation.get("estimated_scenes", 0)
+    if estimated_scenes < num_scenes:
+        logger.log(f"Warning: Requested {num_scenes} scenes but story only supports approximately {estimated_scenes} scenes")
+        num_scenes = min(num_scenes, max(estimated_scenes, 1))
+
+    # Step 2: Extract characters
+    logger.log("Extracting characters from story")
+    characters = extract_characters(story_text, openai_client, model)
+    if not characters:
+        logger.log("Failed to extract characters from the story")
+        return None
+
+    # Step 3: Generate scenes
+    logger.log(f"Generating {num_scenes} scenes from story")
+    scenes = generate_scenes(story_text, num_scenes, characters, openai_client, model)
+    if not scenes:
+        logger.log("Failed to generate scenes from the story")
+        return None
+
+    # Step 4: Create the final JSON structure
+    logger.log("Creating final JSON structure")
+    result = create_story_illustration_json(story_text, characters, scenes)
+
+    # Step 5: Save to file
+    try:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        logger.log(f"Story illustration saved to {output_file}")
+        return output_file
+    except Exception as e:
+        logger.log(f"Error saving output file: {e}")
+        return None

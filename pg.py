@@ -205,6 +205,72 @@ def showstyles(show_desc, show_palette):
             click.echo(f'  Palette: {info.get("palette", "")}')
         click.echo('')
 
+
+@execution_time_decorator
+@spinner_decorator
+@cli.command()
+@click.option('-i', '--input_file', type=click.File('r', encoding="utf-8"), required=True,
+              help='Input file containing the story text.')
+@click.option('-o', '--output_file', type=str, required=True, 
+              help='Output JSON file to save the illustration data.')
+@click.option('-n', '--num_scenes', type=int, default=10, 
+              help='Number of scenes to generate (default: 10).')
+def ill_story(input_file, output_file, num_scenes):
+    """
+    Illustrate a story by generating character descriptions and scene breakdowns.
+
+    This command analyzes a story text, extracts characters and their appearances,
+    and generates detailed descriptions of key scenes for illustration purposes.
+    The output is saved as a structured JSON file.
+
+    Parameters:
+    -----------
+    input_file : file
+        Input file containing the story text.
+    output_file : str
+        Path to save the output JSON file.
+    num_scenes : int, optional
+        Number of scenes to generate (default: 10).
+
+    Returns:
+    --------
+    None
+
+    Example usage:
+    -------------
+    pg.py ill_story --input_file story.txt --output_file illustration.json --num_scenes 12
+    """
+    # Read the story text from the input file
+    story_text = input_file.read()
+    # with open(input_file, "r", encoding="utf-8") as file:   # or "windows-1252", "latin-1", etc.
+    #     story_text = file.read()
+
+
+    # Log the command execution
+    click.echo(f"Illustrating story from {input_file.name} with {num_scenes} scenes...")
+
+    # Ensure output file has .json extension
+    if not output_file.lower().endswith('.json'):
+        output_file += '.json'
+
+    # Call the illustrate_story function
+    result_file = sf.illustrate_story(
+        story_text=story_text,
+        output_file=output_file,
+        num_scenes=num_scenes,
+        openai_client=openAIClient,
+        model=model_to_chat
+    )
+
+    # Check if the operation was successful
+    if result_file:
+        click.echo(f"Story illustration completed successfully!")
+        click.echo(f"Output saved to: {result_file}")
+        sf.log_prompt_output("ill_story", story_text[:500] + "..." if len(story_text) > 500 else story_text, result_file)
+    else:
+        click.echo("Failed to illustrate the story. Check the logs for details.")
+
+
 if __name__ == '__main__':
     config = Config.Config()
     model_to_chat = config.get("MAIN_MODEL")

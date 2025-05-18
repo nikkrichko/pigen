@@ -47,6 +47,11 @@ examples:
   ```bash
   python pg.py showstyles
   ```
+- Illustrate a story by generating character descriptions and scene breakdowns
+  ```bash
+  python pg.py ill-story -i story.txt -o illustration.json -n 10
+  ```
+
 
 If you omit ``--output_file`` the image is saved inside ``temp/`` with a
 timestamped name like ``010124_120000_style1.png``.
@@ -57,8 +62,9 @@ In short, the pipeline is:
 2. Apply one or more styles using `picbystyle` or `multistyle`.
 3. The final prompt is sent to DALL·E and the image is saved with a timestamp.
 
-More detailed instructions, including configuration and available styles, can be
-found in [docs/CREATING_PICTURES.md](docs/CREATING_PICTURES.md).
+More detailed instructions can be found in:
+- [Creating Pictures](docs/CREATING_PICTURES.md) - How to generate images with styles
+- [Illustrating Stories](docs/ILLUSTRATING_STORIES.md) - How to analyze stories for illustration
 
 ## Configuration
 
