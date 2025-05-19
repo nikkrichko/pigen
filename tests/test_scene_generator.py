@@ -9,6 +9,29 @@ import sys
 import json
 import unittest
 from unittest.mock import patch, MagicMock
+import types
+
+# Stub dependencies before importing project code
+openai_stub = types.ModuleType('openai')
+openai_stub.OpenAI = lambda *a, **k: types.SimpleNamespace()
+sys.modules['openai'] = openai_stub
+
+gpt_tools_stub = types.ModuleType('reseach.gpt_tools')
+class DummyGptClient:
+    def run_prompt(self, *a, **k):
+        return types.SimpleNamespace(choices=[types.SimpleNamespace(message=types.SimpleNamespace(content="{}"))])
+gpt_tools_stub.GptClient = DummyGptClient
+sys.modules['reseach.gpt_tools'] = gpt_tools_stub
+
+logger_stub = types.ModuleType('support.logger')
+class DummyLogger:
+    def __init__(self, *a, **k):
+        self.logger = None
+    def log(self, *a, **k):
+        pass
+logger_stub.Logger = DummyLogger
+logger_stub.delog = lambda: (lambda f: f)
+sys.modules['support.logger'] = logger_stub
 
 # Add the project root directory to the Python path
 import os

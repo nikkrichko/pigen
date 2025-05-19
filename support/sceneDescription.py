@@ -83,8 +83,10 @@ class SceneGenerator:
             # Create the Pydantic model instance
             scene = SceneDescription(**data)
 
-            # Return JSON dictionary
-            return scene.model_dump()
+            # Return JSON dictionary (support Pydantic v1 and v2)
+            if hasattr(scene, "model_dump"):
+                return scene.model_dump()
+            return scene.dict()
         except (ValidationError, json.JSONDecodeError) as e:
             error_msg = f"Error converting message to JSON: {str(e)}"
             self.logger.log(error_msg)
@@ -121,10 +123,11 @@ class SceneGenerator:
         """
 
         try:
-            prompt_result = self.gpt_client.run_prompt(
-                gpt_role, 
-                gpt_task, 
-                SceneDescription, 
+            client = GptClient()
+            prompt_result = client.run_prompt(
+                gpt_role,
+                gpt_task,
+                SceneDescription,
                 self.gpt_model
             )
 
@@ -150,7 +153,8 @@ class SceneGenerator:
         """
         try:
             with open(filename, 'w', encoding='utf-8') as f:
-                json.dump(scene, f, indent=4, ensure_ascii=False)
+                json_text = json.dumps(scene, indent=4, ensure_ascii=False)
+                f.write(json_text)
             self.logger.log(f"Scene description saved to {filename}")
             return True
         except Exception as e:

@@ -6,6 +6,8 @@ import random
 import sys
 from typing import Any, Dict, List, Optional, Union
 
+import requests
+
 import openai
 
 from support.decorators import spinner_decorator, execution_time_decorator, log_function_info_and_debug
@@ -40,7 +42,13 @@ def generate_image(picture_prompt, openai_client, model="gpt-image-1", size="102
         size=size
     )
 
-    image_bytes = base64.b64decode(img.data[0].b64_json)
+    first = img.data[0]
+    if hasattr(first, "b64_json"):
+        image_bytes = base64.b64decode(first.b64_json)
+    else:
+        url = first.url
+        response = requests.get(url)
+        image_bytes = response.content
 
     return image_bytes
 
