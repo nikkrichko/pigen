@@ -507,12 +507,13 @@ def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[
 
 
 @log_function_info_and_debug(Logger().logger)
-def extract_characters(text: str, openai_client: openai.Client, model: str) -> Dict[str, Dict[str, str]]:
+def extract_characters(text: str, openai_client: openai.Client, model: str) -> Dict[str, Dict[str, Any]]:
     """
     Extracts characters and their appearances from a story.
 
     This function sends a request to the OpenAI API to identify all characters
-    in the story and generate detailed descriptions of their appearances.
+    in the story and generate detailed descriptions of their appearances using
+    the CharacterAppearance class.
 
     Parameters
     ----------
@@ -525,49 +526,66 @@ def extract_characters(text: str, openai_client: openai.Client, model: str) -> D
 
     Returns
     -------
-    Dict[str, Dict[str, str]]
+    Dict[str, Dict[str, Any]]
         A dictionary where keys are character names and values are dictionaries
         containing appearance details
     """
+    # First, get the list of characters from the story
     prompt = f"""
-    Analyze the following story and identify all characters. For each character, provide a detailed description
-    of their physical appearance, clothing, and any distinctive features.
+    Analyze the following story and identify all characters. Just list the character names without any descriptions.
 
     Story:
     {text}
 
-    For each character, extract:
-    1. Physical appearance (age, height, build, hair, eyes, etc.)
-    2. Clothing and accessories
-    3. Distinctive features or characteristics
-    4. Any other visual details mentioned in the text
-
-    If details aren't explicitly mentioned in the text, make reasonable inferences based on the character's role,
-    time period, setting, and other contextual clues. Always respond in English regardless of the input language.
-
-    Respond in JSON format with character names as keys and appearance details as nested objects:
+    Respond in JSON format with an array of character names:
     {{
-        "Character Name": {{
-            "physical_appearance": "Detailed description...",
-            "clothing": "Detailed description...",
-            "distinctive_features": "Detailed description..."
-        }},
-        ...
+        "characters": ["Character Name 1", "Character Name 2", ...]
     }}
     """
 
     try:
+        # Get the list of characters
         completion = openai_client.chat.completions.create(
             model=model,
             response_format={"type": "json_object"},
             messages=[
-                {"role": "system", "content": "You are a character analyst who specializes in extracting detailed visual descriptions of characters from narrative text."},
+                {"role": "system", "content": "You are a character analyst who specializes in extracting characters from narrative text."},
                 {"role": "user", "content": prompt}
             ]
         )
 
-        response = json.loads(completion.choices[0].message.content)
-        return response
+        characters_list = json.loads(completion.choices[0].message.content)
+
+        # Initialize CharacterAppearance class
+        from support.character_description import CharacterAppearance
+        ca = CharacterAppearance(gpt_model=model)
+
+        # Ensure temp directory exists
+        import os
+        if not os.path.exists("temp"):
+            os.makedirs("temp")
+
+        # Generate detailed appearance for each character
+        result = {}
+        for character_name in characters_list.get("characters", []):
+            # Generate appearance for this character
+            detailed_appearance = ca.generate_appearance(character_name)
+
+            # Create a simplified appearance for backward compatibility
+            simplified_appearance = {
+                "physical_appearance": f"A {detailed_appearance.get('physical_attributes', {}).get('build', '')} character with {detailed_appearance.get('physical_attributes', {}).get('hair', {}).get('color', '')} hair",
+                "clothing": f"{detailed_appearance.get('primary_outfit', {}).get('garment_type', '')} in {', '.join(detailed_appearance.get('primary_outfit', {}).get('colors', ['']))}",
+                "distinctive_features": detailed_appearance.get('physical_attributes', {}).get('distinguishing_marks', '')
+            }
+
+            # Save simplified appearance to result dictionary
+            result[character_name] = detailed_appearance
+
+            # Save detailed appearance to file
+            filename = f"temp/{character_name.replace(' ', '_').lower()}_appearance.json"
+            ca.save_appearance_to_file(detailed_appearance, filename)
+
+        return result
     except Exception as e:
         print(f"Error extracting characters: {e}")
         return {}
@@ -579,8 +597,8 @@ def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, 
     """
     Generates a list of scenes from a story.
 
-    This function sends a request to the OpenAI API to identify key scenes from the story
-    and generate detailed descriptions for each scene, including which characters are present.
+    This function uses the SceneGenerator class to generate detailed descriptions
+    for each scene, including which characters are present.
 
     Parameters
     ----------
@@ -591,7 +609,7 @@ def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, 
     characters : Dict[str, Dict[str, str]]
         Dictionary of characters and their appearances
     openai_client : openai.Client
-        The OpenAI client to use for the API request
+        The OpenAI client to use for the API request (used for compatibility)
     model : str
         The model to use for the API request
 
@@ -600,52 +618,26 @@ def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, 
     List[Dict[str, Any]]
         A list of dictionaries, each representing a scene with description and characters
     """
-    character_names = list(characters.keys())
-    character_names_str = ", ".join(character_names)
-
-    prompt = f"""
-    Analyze the following story and identify {num_scenes} key scenes that would be most suitable for illustration.
-
-    Story:
-    {text}
-
-    Known characters: {character_names_str}
-
-    For each scene, provide:
-    1. A detailed visual description of the scene
-    2. The list of characters present in the scene
-    3. The setting and environment details
-    4. Any important objects or props
-
-    Focus on visually interesting and significant moments in the story. Always respond in English regardless of the input language.
-
-    Respond in JSON format as an array of scene objects:
-    [
-        {{
-            "scene_number": 1,
-            "description": "Detailed visual description of the scene...",
-            "characters": ["Character1", "Character2", ...],
-            "setting": "Description of the setting...",
-            "objects": ["Object1", "Object2", ...]
-        }},
-        ...
-    ]
-
-    Ensure you generate exactly {num_scenes} scenes, or fewer if the story doesn't contain enough distinct scenes.
-    """
-
     try:
-        completion = openai_client.chat.completions.create(
-            model=model,
-            response_format={"type": "json_object"},
-            messages=[
-                {"role": "system", "content": "You are a scene analyst who specializes in identifying key visual moments from narrative text."},
-                {"role": "user", "content": prompt}
-            ]
-        )
+        # Extract character names from the characters dictionary
+        character_names = list(characters.keys())
 
-        response = json.loads(completion.choices[0].message.content)
-        return response.get("scenes", []) if isinstance(response, dict) else response
+        # Initialize the SceneGenerator with the specified model
+        from support.sceneDescription import SceneGenerator
+        scene_generator = SceneGenerator(gpt_model=model)
+
+        # Generate scenes using the SceneGenerator
+        scenes_dict = scene_generator.generate_scenes_from_story(text, num_scenes, character_names)
+
+        # Convert the dictionary of scenes to a list for compatibility with existing code
+        scenes_list = []
+        for scene_number, scene_data in scenes_dict.items():
+            # Add scene_number as both a string and an integer for compatibility
+            scene_data_copy = scene_data.copy()
+            scene_data_copy["scene_number"] = int(scene_number)
+            scenes_list.append(scene_data_copy)
+
+        return scenes_list
     except Exception as e:
         print(f"Error generating scenes: {e}")
         return []
@@ -719,16 +711,16 @@ def illustrate_story(story_text: str, output_file: str, num_scenes: int,
     logger = Logger()
     logger.log(f"Starting story illustration process for {len(story_text)} characters of text")
 
-    # Step 1: Validate the story
-    validation = validate_story(story_text, openai_client, model)
-    if not validation.get("is_story", False):
-        logger.log(f"Validation failed: {validation.get('reason', 'Unknown reason')}")
-        return None
-
-    estimated_scenes = validation.get("estimated_scenes", 0)
-    if estimated_scenes < num_scenes:
-        logger.log(f"Warning: Requested {num_scenes} scenes but story only supports approximately {estimated_scenes} scenes")
-        num_scenes = min(num_scenes, max(estimated_scenes, 1))
+    # # Step 1: Validate the story
+    # validation = validate_story(story_text, openai_client, model)
+    # if not validation.get("is_story", False):
+    #     logger.log(f"Validation failed: {validation.get('reason', 'Unknown reason')}")
+    #     return None
+    #
+    # estimated_scenes = validation.get("estimated_scenes", 0)
+    # if estimated_scenes < num_scenes:
+    #     logger.log(f"Warning: Requested {num_scenes} scenes but story only supports approximately {estimated_scenes} scenes")
+    #     num_scenes = min(num_scenes, max(estimated_scenes, 1))
 
     # Step 2: Extract characters
     logger.log("Extracting characters from story")
