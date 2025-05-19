@@ -118,8 +118,11 @@ def execution_time_decorator(func):
     return wrapper
 
 
-def log_function_info_and_debug(logger=logging.getLogger()):
+def log_function_info_and_debug(logger=None):
     """Log timing and arguments for a decorated function."""
+    if logger is None:
+        from support.logger import Logger
+        logger = Logger().logger
 
     def decorator(func):
         @wraps(func)

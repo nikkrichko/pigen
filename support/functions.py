@@ -440,7 +440,7 @@ def log_prompt_output(command_name: str, prompt_text: str, output_text: str) -> 
 
 # Functions for the ill_story command
 
-@log_function_info_and_debug(Logger().logger)
+@log_function_info_and_debug()
 def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[str, Any]:
     """
     Validates if the input text is a story and not technical text.
@@ -506,7 +506,7 @@ def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[
         }
 
 
-@log_function_info_and_debug(Logger().logger)
+@log_function_info_and_debug()
 def extract_characters(text: str, openai_client: openai.Client, model: str) -> Dict[str, Dict[str, Any]]:
     """
     Extracts characters and their appearances from a story.
@@ -591,7 +591,7 @@ def extract_characters(text: str, openai_client: openai.Client, model: str) -> D
         return {}
 
 
-@log_function_info_and_debug(Logger().logger)
+@log_function_info_and_debug()
 def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, str]], 
                    openai_client: openai.Client, model: str) -> List[Dict[str, Any]]:
     """
@@ -643,7 +643,7 @@ def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, 
         return []
 
 
-@log_function_info_and_debug(Logger().logger)
+@log_function_info_and_debug()
 def create_story_illustration_json(story_text: str, characters: Dict[str, Dict[str, str]], 
                                   scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
@@ -681,7 +681,7 @@ def create_story_illustration_json(story_text: str, characters: Dict[str, Dict[s
     return result
 
 
-@log_function_info_and_debug(Logger().logger)
+@log_function_info_and_debug()
 def illustrate_story(story_text: str, output_file: str, num_scenes: int, 
                     openai_client: openai.Client, model: str) -> Optional[str]:
     """

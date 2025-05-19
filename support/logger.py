@@ -3,16 +3,31 @@ import support.Configurator as Config
 import time
 
 class Logger:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Logger, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
     def __init__(self):
+        if self._initialized:
+            return
+
         config = Config.Config()
         self.log_level = config.get('LOG_LEVEL')
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(self.log_level)
 
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        handler = logging.StreamHandler()
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
+        # Only add handler if there are none already
+        if not self.logger.handlers:
+            formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            handler = logging.StreamHandler()
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
+
+        self._initialized = True
 
     def log(self, message):
         if self.log_level == "DEBUG":

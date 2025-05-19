@@ -108,7 +108,7 @@ class CharacterAppearance:
         self.logger = Logger()
         self.logger.log(f"CharacterAppearance initialized with model: {gpt_model}")
 
-    @log_function_info_and_debug(Logger().logger)
+    @log_function_info_and_debug()
     def _convert_message_to_json(self, message) -> Dict[str, Any]:
         """
         Convert an OpenAI API message to a JSON dictionary.
@@ -168,7 +168,7 @@ class CharacterAppearance:
             self.logger.log(error_msg)
             return {"error": error_msg}
 
-    @log_function_info_and_debug(Logger().logger)
+    @log_function_info_and_debug()
     def save_appearance_to_file(self, appearance: Dict[str, Any], filename: str) -> bool:
         """
         Save a character appearance description to a file.

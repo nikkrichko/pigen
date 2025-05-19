@@ -62,7 +62,7 @@ class SceneGenerator:
         self.logger = Logger()
         self.logger.log(f"SceneGenerator initialized with model: {gpt_model}")
 
-    @log_function_info_and_debug(Logger().logger)
+    @log_function_info_and_debug()
     def _convert_message_to_json(self, message) -> Dict[str, Any]:
         """
         Convert an OpenAI API message to a JSON dictionary.
@@ -136,7 +136,7 @@ class SceneGenerator:
             self.logger.log(error_msg)
             return {"error": error_msg}
 
-    @log_function_info_and_debug(Logger().logger)
+    @log_function_info_and_debug()
     def save_scene_to_file(self, scene: Dict[str, Any], filename: str) -> bool:
         """
         Save a scene description to a file.
