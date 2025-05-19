@@ -22,6 +22,12 @@ else:
     logger_stub = types.ModuleType('support.logger')
     sys.modules['support.logger'] = logger_stub
 logger_stub.delog = lambda: (lambda f: f)
+class DummyLogger:
+    def __init__(self, *a, **k):
+        self.logger = None
+    def log(self, *a, **k):
+        pass
+logger_stub.Logger = DummyLogger
 
 if 'support.decorators' in sys.modules:
     decorators_stub = sys.modules['support.decorators']
@@ -30,6 +36,7 @@ else:
     sys.modules['support.decorators'] = decorators_stub
 decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
+decorators_stub.log_function_info_and_debug = lambda logger=None: (lambda f: f)
 
 import support.functions as f
 
