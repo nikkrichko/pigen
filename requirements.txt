@@ -1,4 +1,7 @@
-openai
 click
-requests
 icecream
+openai
+pydantic
+PyYAML
+requests
+urllib3
