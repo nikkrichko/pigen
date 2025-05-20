@@ -9,6 +9,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
 import support.functions as sf
 import concurrent.futures
+import json
 import support.logger as logger
 import support.Configurator as Config
 from support.logger import Logger, delog
@@ -212,6 +213,27 @@ def showstyles(show_desc, show_palette):
         if show_palette:
             click.echo(f'  Palette: {info.get("palette", "")}')
         click.echo('')
+
+
+@delog()
+@execution_time_decorator
+@spinner_decorator
+@cli.command('characters')
+@click.option('-i', '--input_file', type=click.File('r', encoding='utf-8'), required=True,
+              help='Input file containing the story text.')
+@click.option('-o', '--output_file', type=str, required=True,
+              help='Output JSON file to save the characters data.')
+def characters_cmd(input_file, output_file):
+    """Extract characters from a story and save them to JSON."""
+    story_text = input_file.read()
+    click.echo(f"Extracting characters from {input_file.name}...")
+    characters = sf.extract_characters(story_text, openAIClient, model_to_chat)
+    if not output_file.lower().endswith('.json'):
+        output_file += '.json'
+    with open(output_file, 'w', encoding='utf-8') as fh:
+        json.dump(characters, fh, indent=2, ensure_ascii=False)
+    sf.log_prompt_output('characters', story_text[:500] + '...' if len(story_text) > 500 else story_text, output_file)
+    click.echo(f"Characters saved to: {output_file}")
 
 
 @delog()
