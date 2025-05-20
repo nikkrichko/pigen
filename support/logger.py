@@ -1,6 +1,7 @@
 import logging
+from functools import wraps
+
 import support.Configurator as Config
-import time
 
 class Logger:
     _instance = None
@@ -16,8 +17,9 @@ class Logger:
             return
 
         config = Config.Config()
-        self.log_level = config.get('LOG_LEVEL')
-        self.logger = logging.getLogger(__name__)
+        level_name = str(config.get('LOG_LEVEL')).upper()
+        self.log_level = getattr(logging, level_name, logging.INFO)
+        self.logger = logging.getLogger("pigen")
         self.logger.setLevel(self.log_level)
 
         # Only add handler if there are none already
@@ -29,30 +31,44 @@ class Logger:
 
         self._initialized = True
 
-    def log(self, message):
-        if self.log_level == "DEBUG":
-            self.logger.debug(message)
-        else:
-            self.logger.info(message)
+    def log(self, message, level=None):
+        level = level or self.log_level
+        if isinstance(level, str):
+            level = getattr(logging, level.upper(), logging.INFO)
+        self.logger.log(level, message)
 
-def delog():
+    def info(self, message):
+        self.logger.info(message)
+
+    def debug(self, message):
+        self.logger.debug(message)
+
+    def error(self, message):
+        self.logger.error(message)
+
+def delog(level="DEBUG"):
+    """Decorator to log function start/finish at the given level.
+
+    Parameters
+    ----------
+    level : str, optional
+        Logging level name ("INFO" or "DEBUG"), by default "DEBUG".
+    """
     logger = Logger()
 
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            start_time = time.time()
+            log_method = logger.info if level.upper() == "INFO" else logger.debug
+            log_method(f"{func.__name__} - started")
+            try:
+                result = func(*args, **kwargs)
+                log_method(f"{func.__name__} - finished")
+                return result
+            except Exception as e:
+                logger.error(f"{func.__name__} - error: {e}")
+                raise
 
-            logger.log(f'{func.__name__} - started')
-
-            result = func(*args, **kwargs)
-
-            end_time = time.time()
-            logger.log(f'{func.__name__} - finished in {end_time - start_time:.2f} seconds')
-
-            if logger.log_level == "DEBUG":
-                debug_message = f'Execution time for {func.__name__}: {end_time - start_time:.2f} seconds -- {func.__name__} - args: {args}, kwargs: {kwargs}'
-                logger.log(debug_message)
-
-            return result
         return wrapper
+
     return decorator

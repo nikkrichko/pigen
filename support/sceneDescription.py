@@ -92,7 +92,7 @@ class SceneGenerator:
             self.logger.log(error_msg)
             return {"error": error_msg}
 
-    @delog()
+    @delog("INFO")
     def generate_scene(self, scene_number: int, story_context: str, characters: List[str]) -> Dict[str, Any]:
         """
         Generate a scene description.
@@ -161,7 +161,7 @@ class SceneGenerator:
             self.logger.log(f"Error saving scene description to {filename}: {str(e)}")
             return False
 
-    @delog()
+    @delog("INFO")
     def generate_scenes_from_story(self, story_text: str, num_scenes: int, characters: List[str]) -> Dict[str, Dict[str, Any]]:
         """
         Generate multiple scene descriptions from a story.
