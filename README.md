@@ -53,6 +53,10 @@ examples:
   # reuse existing characters
   python pg.py ill-story -i story.txt -o illustration.json -n 10 -c chars.json
   ```
+- Extract characters from a story file
+  ```bash
+  python pg.py characters -i story.txt -o characters.json
+  ```
 
 
 If you omit ``--output_file`` the image is saved inside ``temp/`` with a
