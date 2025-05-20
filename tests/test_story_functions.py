@@ -4,7 +4,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-# Stub external modules used in support.functions
+# Stub external modules used in story utilities
 openai_stub = types.ModuleType('openai')
 openai_stub.Client = object
 openai_stub.OpenAI = lambda *a, **k: types.SimpleNamespace()
@@ -46,7 +46,7 @@ decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
 decorators_stub.log_function_info_and_debug = lambda logger=None: (lambda f: f)
 
-import support.functions as sf
+import support.story_utils as sf
 import support.character_description
 import support.sceneDescription
 
@@ -84,9 +84,7 @@ class StoryFunctionTests(unittest.TestCase):
         with patch('support.character_description.CharacterAppearance.generate_appearance',
                    side_effect=lambda name: {"name": name}), \
              patch('support.character_description.CharacterAppearance.save_appearance_to_file',
-                   return_value=True), \
-             patch('support.functions.os.path.exists', return_value=True), \
-             patch('support.functions.os.makedirs'):
+                   return_value=True):
             result = sf.extract_characters("story", dummy_client, "model")
         expected = {"Alice": {"name": "Alice"}, "Bob": {"name": "Bob"}}
         self.assertEqual(result, expected)

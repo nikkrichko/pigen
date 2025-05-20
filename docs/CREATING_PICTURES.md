@@ -11,7 +11,7 @@ picture. Understanding each stage will help you customize the results:
 
 1. **Idea Generation** – Using the `idea` command, a short concept is
    expanded into a detailed description. The helper function
-   `generate_and_save_idea` (defined in `support/functions.py`) sends your
+   `generate_and_save_idea` (defined in `support/style_utils.py`) sends your
    prompt to ChatGPT and saves the response to a file.
 2. **Prompt Adoption** – Commands such as `picbystyle` and `multistyle`
    read the idea file and adapt it to a specific style. The

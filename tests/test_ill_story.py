@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
-# Stub external modules used in support.functions
+# Stub external modules used in story utilities
 openai_stub = types.ModuleType('openai')
 openai_stub.Client = object
 openai_stub.LengthFinishReasonError = Exception
@@ -28,7 +28,7 @@ decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
 decorators_stub.log_function_info_and_debug = lambda logger=None: (lambda f: f)
 
-import support.functions as sf
+import support.story_utils as sf
 
 
 class IllStoryTests(unittest.TestCase):
@@ -98,7 +98,7 @@ class IllStoryTests(unittest.TestCase):
             }
         ]
 
-    @patch('support.functions.validate_story')
+    @patch('support.story_utils.validate_story')
     def test_validate_story_success(self, mock_validate):
         """Test successful story validation."""
         mock_validate.return_value = self.validation_response
@@ -108,7 +108,7 @@ class IllStoryTests(unittest.TestCase):
         self.assertTrue(result["is_story"])
         self.assertEqual(result["estimated_scenes"], 5)
 
-    @patch('support.functions.extract_characters')
+    @patch('support.story_utils.extract_characters')
     def test_extract_characters_success(self, mock_extract):
         """Test successful character extraction."""
         mock_extract.return_value = self.characters_response
@@ -120,7 +120,7 @@ class IllStoryTests(unittest.TestCase):
         self.assertIn("Thomas", result)
         self.assertIn("Dragon", result)
 
-    @patch('support.functions.generate_scenes')
+    @patch('support.story_utils.generate_scenes')
     def test_generate_scenes_success(self, mock_generate):
         """Test successful scene generation."""
         mock_generate.return_value = self.scenes_response
@@ -156,9 +156,9 @@ class IllStoryTests(unittest.TestCase):
         self.assertEqual(result["metadata"]["num_characters"], 3)
         self.assertEqual(result["metadata"]["num_scenes"], 3)
 
-    @patch('support.functions.validate_story')
-    @patch('support.functions.extract_characters')
-    @patch('support.functions.generate_scenes')
+    @patch('support.story_utils.validate_story')
+    @patch('support.story_utils.extract_characters')
+    @patch('support.story_utils.generate_scenes')
     def test_illustrate_story_success(self, mock_generate, mock_extract, mock_validate):
         """Test successful story illustration end-to-end."""
         mock_validate.return_value = self.validation_response
@@ -187,7 +187,7 @@ class IllStoryTests(unittest.TestCase):
             self.assertEqual(len(data["characters"]), 3)
             self.assertEqual(len(data["scenes"]), 3)
 
-    @patch('support.functions.validate_story')
+    @patch('support.story_utils.validate_story')
     def test_illustrate_story_validation_failure(self, mock_validate):
         """Test story illustration when validation fails."""
         mock_validate.return_value = {
@@ -206,9 +206,9 @@ class IllStoryTests(unittest.TestCase):
         
         self.assertIsNone(result)
 
-    @patch('support.functions.generate_scenes')
-    @patch('support.functions.load_characters_from_file')
-    @patch('support.functions.extract_characters')
+    @patch('support.story_utils.generate_scenes')
+    @patch('support.story_utils.load_characters_from_file')
+    @patch('support.story_utils.extract_characters')
     def test_illustrate_story_with_charfile(self, mock_extract, mock_load, mock_generate):
         """Illustration uses characters from a JSON file."""
         mock_generate.return_value = self.scenes_response
@@ -235,8 +235,8 @@ class IllStoryTests(unittest.TestCase):
                 data = json.load(fh)
             self.assertEqual(len(data["characters"]), 3)
 
-    @patch('support.functions.load_characters_from_file')
-    @patch('support.functions.generate_scenes')
+    @patch('support.story_utils.load_characters_from_file')
+    @patch('support.story_utils.generate_scenes')
     def test_illustrate_story_invalid_charfile(self, mock_generate, mock_load):
         """Invalid character file should abort."""
         mock_load.return_value = None

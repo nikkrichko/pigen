@@ -67,7 +67,7 @@ class ShowStylesTests(unittest.TestCase):
             def loader(fp=style_path):
                 with open(style_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
-            with mock.patch('support.functions.load_styles', loader):
+            with mock.patch('support.style_utils.load_styles', loader):
                 result = runner.invoke(pg.cli, ['showstyles'])
             self.assertIn('Style: Test', result.output)
 
@@ -80,7 +80,7 @@ class ShowStylesTests(unittest.TestCase):
             def loader(fp=style_path):
                 with open(style_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
-            with mock.patch('support.functions.load_styles', loader):
+            with mock.patch('support.style_utils.load_styles', loader):
                 result = runner.invoke(pg.cli, ['showstyles', '-d', '-p'])
             self.assertIn('Description: d', result.output)
             self.assertIn('Palette: p', result.output)

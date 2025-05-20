@@ -4,7 +4,7 @@ import json
 import tempfile
 import unittest
 
-# Stub external modules used in support.functions
+# Stub external modules used in style utilities
 openai_stub = types.ModuleType('openai')
 openai_stub.Client = object
 sys.modules['openai'] = openai_stub
@@ -38,7 +38,7 @@ decorators_stub.spinner_decorator = lambda f: f
 decorators_stub.execution_time_decorator = lambda f: f
 decorators_stub.log_function_info_and_debug = lambda logger=None: (lambda f: f)
 
-import support.functions as f
+import support.style_utils as f
 
 
 class AddStyleTests(unittest.TestCase):
