@@ -1,13 +1,12 @@
 import click
 from openai import OpenAI
 from icecream import ic
-from support import functions as sf
+import support.functions as sf
 # Decorators used across CLI commands
 from support.decorators import spinner_decorator, execution_time_decorator
 # from support.functions import generate_image, save_picture, get_dalle_prompt_based_on_input, execution_time_decorator, save_text_to_file
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.NotOpenSSLWarning)
-import support.functions as sf
 import concurrent.futures
 import json
 import support.logger as logger
@@ -242,11 +241,14 @@ def characters_cmd(input_file, output_file):
 @cli.command()
 @click.option('-i', '--input_file', type=click.File('r', encoding="utf-8"), required=True,
               help='Input file containing the story text.')
-@click.option('-o', '--output_file', type=str, required=True, 
+@click.option('-o', '--output_file', type=str, required=True,
               help='Output JSON file to save the illustration data.')
-@click.option('-n', '--num_scenes', type=int, default=10, 
+@click.option('-n', '--num_scenes', type=int, default=10,
               help='Number of scenes to generate (default: 10).')
-def ill_story(input_file, output_file, num_scenes):
+@click.option('-c', '--charfile', type=click.Path(exists=True, dir_okay=False),
+              default=None,
+              help='Optional JSON file with character descriptions.')
+def ill_story(input_file, output_file, num_scenes, charfile):
     """
     Illustrate a story by generating character descriptions and scene breakdowns.
 
@@ -262,6 +264,9 @@ def ill_story(input_file, output_file, num_scenes):
         Path to save the output JSON file.
     num_scenes : int, optional
         Number of scenes to generate (default: 10).
+    charfile : str, optional
+        JSON file with pre-generated character descriptions. If provided,
+        characters are loaded from this file instead of being generated.
 
     Returns:
     --------
@@ -270,6 +275,7 @@ def ill_story(input_file, output_file, num_scenes):
     Example usage:
     -------------
     pg.py ill_story --input_file story.txt --output_file illustration.json --num_scenes 12
+    pg.py ill_story -i story.txt -o illustration.json -n 10 -c characters.json
     """
     # Read the story text from the input file
     story_text = input_file.read()
@@ -278,7 +284,11 @@ def ill_story(input_file, output_file, num_scenes):
 
 
     # Log the command execution
-    click.echo(f"Illustrating story from {input_file.name} with {num_scenes} scenes...")
+    msg = f"Illustrating story from {input_file.name} with {num_scenes} scenes"
+    if charfile:
+        msg += f" using characters from {charfile}"
+    msg += "..."
+    click.echo(msg)
 
     # Ensure output file has .json extension
     if not output_file.lower().endswith('.json'):
@@ -290,7 +300,8 @@ def ill_story(input_file, output_file, num_scenes):
         output_file=output_file,
         num_scenes=num_scenes,
         openai_client=openAIClient,
-        model=model_to_chat
+        model=model_to_chat,
+        charfile=charfile
     )
 
     # Check if the operation was successful
