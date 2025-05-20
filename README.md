@@ -125,3 +125,7 @@ More details can be found in
 [docs/tests/USAGE.md](docs/tests/USAGE.md). The `test_addstyle.py` module
 ensures the `addstyle` command works as expected and demonstrates how to add and
 remove a sample style entry.
+
+For instructions on configuring logging, running the CLI and executing
+individual tests see
+[docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
