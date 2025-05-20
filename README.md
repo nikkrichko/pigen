@@ -15,10 +15,16 @@ styles.
    git clone <repo-url>
    cd pigen
    ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. Set up a Python virtual environment and install dependencies using the
+   provided helper scripts. Choose the script matching your platform:
+   - **Linux/macOS**
+     ```bash
+     ./scripts/install_linux.sh
+     ```
+   - **Windows**
+     ```powershell
+     powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
+     ```
 3. Set your `OPENAI_API_KEY` environment variable. In a Unix shell use
    `export OPENAI_API_KEY=<your-key>`.
 
@@ -103,7 +109,19 @@ After saving you can reference the new style with `-s Comic_Book`.
 
 ## Tests
 
-Mock-based tests covering each pipeline step live in the `tests/` folder. See
-[docs/tests/USAGE.md](docs/tests/USAGE.md) for instructions on running them.
-The `test_addstyle.py` module ensures the `addstyle` command works as expected
-and demonstrates how to add and remove a sample style entry.
+Mock-based tests covering each pipeline step live in the `tests/` folder. Use
+the helper scripts to run them after setting up your environment:
+
+- **Linux/macOS**
+  ```bash
+  ./scripts/run_tests.sh
+  ```
+- **Windows**
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File scripts/run_tests.ps1
+  ```
+
+More details can be found in
+[docs/tests/USAGE.md](docs/tests/USAGE.md). The `test_addstyle.py` module
+ensures the `addstyle` command works as expected and demonstrates how to add and
+remove a sample style entry.
