@@ -21,6 +21,7 @@ TEMP_DIR = "temp"
 
 # Define the decorator
 
+@delog()
 @execution_time_decorator
 @spinner_decorator
 def generate_image(picture_prompt, openai_client, model="gpt-image-1", size="1024x1024", quality="standard", num_of_pics=1):
@@ -127,6 +128,7 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
     picture_prompt = reformatIdeaPrompt(init_prompt_for_reformating, picture_prompt, style_name, style_description, style_palette,additional_prompt)
     return picture_prompt
 
+@delog()
 def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,openAIClient,model_to_chat):
     add_style = adopt_style(initial_idea_prompt, style, additional_user_prompt)
     save_text_to_file(add_style, ADOPT_PROMPT_TXT_PATH)
@@ -135,6 +137,7 @@ def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,o
     save_text_to_file(adopted_prompt, ADOPTED_PROMPT_PATH)
     return adopted_prompt
 
+@delog()
 @execution_time_decorator
 def get_dalle_prompt_based_on_input(openAIclient, input_prompt, model_to_chat):
     role = """As a Prompt Generator Specialist for DALL·E, you will craft detailed prompts that translate user ideas into vivid, DALL·E-compliant visual concepts, demanding creativity and an understanding of artistic styles. Your role involves refining prompts for accuracy, integrating various artistic elements, and ensuring they adhere to content guidelines. Collaboration with users to fine-tune their visions and enhance their experience with DALL·E is key. You'll analyze feedback from generated images to improve prompt effectiveness and educate users on creating impactful prompts. This position requires strong creative skills, language proficiency, and a good grasp of DALL·E's capabilities, offering a unique blend of art and technology."""
@@ -146,6 +149,7 @@ def get_dalle_prompt_based_on_input(openAIclient, input_prompt, model_to_chat):
 
 
 
+@delog()
 def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: str, model_to_chat: str) -> Any:
     try:
         completion = OpenAIclient.chat.completions.create(
@@ -164,8 +168,8 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
     response_msg = completion.choices[0].message.content
     return response_msg
 
-@spinner_decorator
 @delog()
+@spinner_decorator
 def generate_and_save_idea(prompt, outputfile, openAIclient, model_to_chat):
     idea_text = generate_idea(prompt)
     response_msg = get_prompt_result(openAIclient, idea_text, model_to_chat=model_to_chat, gpt_role ="")
@@ -448,6 +452,7 @@ def log_prompt_output(command_name: str, prompt_text: str, output_text: str) -> 
 
 # Functions for the ill_story command
 
+@delog()
 @log_function_info_and_debug()
 def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[str, Any]:
     """
@@ -514,6 +519,7 @@ def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[
         }
 
 
+@delog()
 @log_function_info_and_debug()
 def extract_characters(text: str, openai_client: openai.Client, model: str) -> Dict[str, Dict[str, Any]]:
     """
@@ -599,8 +605,9 @@ def extract_characters(text: str, openai_client: openai.Client, model: str) -> D
         return {}
 
 
+@delog()
 @log_function_info_and_debug()
-def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, str]], 
+def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, str]],
                    openai_client: openai.Client, model: str) -> List[Dict[str, Any]]:
     """
     Generates a list of scenes from a story.
@@ -689,8 +696,9 @@ def create_story_illustration_json(story_text: str, characters: Dict[str, Dict[s
     return result
 
 
+@delog()
 @log_function_info_and_debug()
-def illustrate_story(story_text: str, output_file: str, num_scenes: int, 
+def illustrate_story(story_text: str, output_file: str, num_scenes: int,
                     openai_client: openai.Client, model: str) -> Optional[str]:
     """
     Main function to illustrate a story by generating character descriptions and scenes.
