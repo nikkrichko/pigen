@@ -12,6 +12,7 @@ import openai
 
 from support.decorators import spinner_decorator, execution_time_decorator, log_function_info_and_debug
 from support.logger import delog, Logger
+from pydantic import ValidationError
 
 ADOPT_PROMPT_TXT_PATH = "temp/02_request_to_adopt_prompt.txt"
 ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
@@ -607,6 +608,48 @@ def extract_characters(text: str, openai_client: openai.Client, model: str) -> D
 
 @delog()
 @log_function_info_and_debug()
+def load_characters_from_file(file_path: str) -> Optional[Dict[str, Any]]:
+    """Load character descriptions from a JSON file and validate the structure.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the JSON file containing the characters.
+
+    Returns
+    -------
+    Optional[Dict[str, Any]]
+        Dictionary of validated characters if successful, ``None`` otherwise.
+    """
+    logger = Logger()
+    logger.log(f"Loading characters from {file_path}")
+    try:
+        with open(file_path, 'r', encoding='utf-8') as fh:
+            data = json.load(fh)
+        if not isinstance(data, dict):
+            raise ValueError("Character file must contain a JSON object")
+
+        from support.character_description import CharacterDescription
+        validated: Dict[str, Any] = {}
+        for name, desc in data.items():
+            if hasattr(CharacterDescription, 'model_validate'):
+                model_obj = CharacterDescription.model_validate(desc)
+                validated[name] = model_obj.model_dump()
+            else:
+                model_obj = CharacterDescription(**desc)
+                validated[name] = model_obj.dict()
+
+        return validated
+    except (json.JSONDecodeError, ValidationError, TypeError, ValueError) as e:
+        logger.log(f"Character file validation error: {e}", level="ERROR")
+        return None
+    except Exception as e:
+        logger.log(f"Error loading characters from file: {e}", level="ERROR")
+        return None
+
+
+@delog()
+@log_function_info_and_debug()
 def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, str]],
                    openai_client: openai.Client, model: str) -> List[Dict[str, Any]]:
     """
@@ -699,7 +742,8 @@ def create_story_illustration_json(story_text: str, characters: Dict[str, Dict[s
 @delog()
 @log_function_info_and_debug()
 def illustrate_story(story_text: str, output_file: str, num_scenes: int,
-                    openai_client: openai.Client, model: str) -> Optional[str]:
+                    openai_client: openai.Client, model: str,
+                    charfile: Optional[str] = None) -> Optional[str]:
     """
     Main function to illustrate a story by generating character descriptions and scenes.
 
@@ -718,11 +762,15 @@ def illustrate_story(story_text: str, output_file: str, num_scenes: int,
         The OpenAI client to use for API requests
     model : str
         The model to use for API requests
+    charfile : str, optional
+        Path to a JSON file with pre-generated character descriptions.
+        If provided, characters are loaded from this file instead of being
+        generated automatically.
 
     Returns
     -------
     Optional[str]
-        Path to the output file if successful, None otherwise
+        Path to the output file if successful, ``None`` otherwise
     """
     logger = Logger()
     logger.log(f"Starting story illustration process for {len(story_text)} characters of text")
@@ -739,8 +787,14 @@ def illustrate_story(story_text: str, output_file: str, num_scenes: int,
     #     num_scenes = min(num_scenes, max(estimated_scenes, 1))
 
     # Step 2: Extract characters
-    logger.log("Extracting characters from story")
-    characters = extract_characters(story_text, openai_client, model)
+    if charfile:
+        characters = load_characters_from_file(charfile)
+        if not characters:
+            logger.log("Invalid character file provided", level="ERROR")
+            return None
+    else:
+        logger.log("Extracting characters from story")
+        characters = extract_characters(story_text, openai_client, model)
     if not characters:
         logger.log("Failed to extract characters from the story")
         return None

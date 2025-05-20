@@ -50,6 +50,8 @@ examples:
 - Illustrate a story by generating character descriptions and scene breakdowns
   ```bash
   python pg.py ill-story -i story.txt -o illustration.json -n 10
+  # reuse existing characters
+  python pg.py ill-story -i story.txt -o illustration.json -n 10 -c chars.json
   ```
 
 

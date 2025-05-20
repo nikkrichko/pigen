@@ -206,6 +206,57 @@ class IllStoryTests(unittest.TestCase):
         
         self.assertIsNone(result)
 
+    @patch('support.functions.generate_scenes')
+    @patch('support.functions.load_characters_from_file')
+    @patch('support.functions.extract_characters')
+    def test_illustrate_story_with_charfile(self, mock_extract, mock_load, mock_generate):
+        """Illustration uses characters from a JSON file."""
+        mock_generate.return_value = self.scenes_response
+        mock_load.return_value = self.characters_response
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            char_path = f"{tmpdir}/chars.json"
+            with open(char_path, 'w', encoding='utf-8') as fh:
+                json.dump(self.characters_response, fh)
+            out_path = f"{tmpdir}/out.json"
+
+            result = sf.illustrate_story(
+                self.sample_story,
+                out_path,
+                3,
+                self.mock_client,
+                self.model,
+                charfile=char_path
+            )
+
+            self.assertEqual(result, out_path)
+            mock_extract.assert_not_called()
+            with open(out_path, 'r', encoding='utf-8') as fh:
+                data = json.load(fh)
+            self.assertEqual(len(data["characters"]), 3)
+
+    @patch('support.functions.load_characters_from_file')
+    @patch('support.functions.generate_scenes')
+    def test_illustrate_story_invalid_charfile(self, mock_generate, mock_load):
+        """Invalid character file should abort."""
+        mock_load.return_value = None
+        with tempfile.TemporaryDirectory() as tmpdir:
+            char_path = f"{tmpdir}/bad.json"
+            with open(char_path, 'w', encoding='utf-8') as fh:
+                fh.write("oops")
+            out_path = f"{tmpdir}/out.json"
+
+            result = sf.illustrate_story(
+                self.sample_story,
+                out_path,
+                3,
+                self.mock_client,
+                self.model,
+                charfile=char_path
+            )
+
+            self.assertIsNone(result)
+
 
 if __name__ == "__main__":
     unittest.main()
