@@ -19,6 +19,8 @@ ADOPTED_PROMPT_PATH = "temp/03_adopted_prompt.txt"
 FILE_WITH_STYLES = 'support/styles.json'
 TEMP_DIR = "temp"
 
+logger = Logger()
+
 
 # Define the decorator
 
@@ -27,7 +29,7 @@ TEMP_DIR = "temp"
 @spinner_decorator
 def generate_image(picture_prompt, openai_client, model="gpt-image-1", size="1024x1024", quality="standard", num_of_pics=1):
     global response
-    print("\tGenerating image ...")
+    logger.log("\tGenerating image ...")
     # response = openai_client.images.generate(
     #     model=model,
     #     prompt=picture_prompt,
@@ -55,18 +57,18 @@ def generate_image(picture_prompt, openai_client, model="gpt-image-1", size="102
     return image_bytes
 
 def save_picture(file_name, picture):
-    print("\t\tsaving image ...")
+    logger.log("\t\tsaving image ...")
     file = open(file_name, "wb")
     file.write(picture)
     file.close()
-    print(f"\t\tImage saved to {file_name}.")
+    logger.log(f"\t\tImage saved to {file_name}.")
 
 
 def save_text_to_file(text, filename):
-    print("\t\tSaving text ...")
+    logger.log("\t\tSaving text ...")
     with open(filename, 'w', encoding='utf-8', errors='replace') as file:
         file.write(text)
-    print(f"\t\tText saved to {filename}.")
+    logger.log(f"\t\tText saved to {filename}.")
 
 init_prompt_for_reformating = """
 Rephrase next basic idea prompt with adding style details.
@@ -97,7 +99,7 @@ def reformatIdeaPrompt(text_constant, *args):
         formatted_prompt_for_redesign = text_constant.format(*args)
         return formatted_prompt_for_redesign
     except KeyError as e:
-        print(f"Error: Missing parameter '{e.args[0]}' in the text constant.")
+        logger.log(f"Error: Missing parameter '{e.args[0]}' in the text constant.", level="ERROR")
         return None
 
 
@@ -111,7 +113,7 @@ def get_random_styles_from_file( num_of_styles):
 
 @execution_time_decorator
 def adopt_style(picture_prompt, style_name, additional_prompt=""):
-    print(f"\tAdopting prompt to {style_name} ...")
+    logger.log(f"\tAdopting prompt to {style_name} ...")
     # read json from file styles.json
 
     # TODO if style_name is not in styles.json then resuest for style description and palette at chatgpt
@@ -122,7 +124,10 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
         style_description = styles_map[style_name]["description"]
         style_palette = styles_map[style_name]["palette"]
     except KeyError as e:
-        print(f"Error: Somme issue with style '{style_name}'. \nCheck {FILE_WITH_STYLES} file.")
+        logger.log(
+            f"Error: Somme issue with style '{style_name}'. \nCheck {FILE_WITH_STYLES} file.",
+            level="ERROR",
+        )
         exit(1)
         return None
 
@@ -133,7 +138,7 @@ def adopt_style(picture_prompt, style_name, additional_prompt=""):
 def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,openAIClient,model_to_chat):
     add_style = adopt_style(initial_idea_prompt, style, additional_user_prompt)
     save_text_to_file(add_style, ADOPT_PROMPT_TXT_PATH)
-    print(f"\tAdopting initial prompt to style {style} ...")
+    logger.log(f"\tAdopting initial prompt to style {style} ...")
     adopted_prompt = get_dalle_prompt_based_on_input(openAIClient, add_style, model_to_chat)
     save_text_to_file(adopted_prompt, ADOPTED_PROMPT_PATH)
     return adopted_prompt
@@ -142,7 +147,7 @@ def generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style,o
 @execution_time_decorator
 def get_dalle_prompt_based_on_input(openAIclient, input_prompt, model_to_chat):
     role = """As a Prompt Generator Specialist for DALL·E, you will craft detailed prompts that translate user ideas into vivid, DALL·E-compliant visual concepts, demanding creativity and an understanding of artistic styles. Your role involves refining prompts for accuracy, integrating various artistic elements, and ensuring they adhere to content guidelines. Collaboration with users to fine-tune their visions and enhance their experience with DALL·E is key. You'll analyze feedback from generated images to improve prompt effectiveness and educate users on creating impactful prompts. This position requires strong creative skills, language proficiency, and a good grasp of DALL·E's capabilities, offering a unique blend of art and technology."""
-    print("\tGetting response from DALLE prompt generator ...")
+    logger.log("\tGetting response from DALLE prompt generator ...")
     input_prompt = role + "\n here is user idea you need to improve and get ideal prompt" + input_prompt
     response_msg = get_prompt_result(openAIclient, input_prompt, role, model_to_chat)
     return response_msg
@@ -160,10 +165,10 @@ def get_prompt_result(OpenAIclient: openai.Client, input_prompt: str, gpt_role: 
             ]
         )
     except getattr(openai, "APIConnectionError", Exception) as e:
-        print(f"Connection error when communicating with OpenAI: {e}")
+        logger.log(f"Connection error when communicating with OpenAI: {e}", level="ERROR")
         sys.exit(1)
     except Exception as e:
-        print(f"Error during the request to OpenAI API: {e}")
+        logger.log(f"Error during the request to OpenAI API: {e}", level="ERROR")
         sys.exit(1)
 
     response_msg = completion.choices[0].message.content
@@ -512,7 +517,7 @@ def validate_story(text: str, openai_client: openai.Client, model: str) -> Dict[
         response = json.loads(completion.choices[0].message.content)
         return response
     except Exception as e:
-        print(f"Error validating story: {e}")
+        logger.log(f"Error validating story: {e}", level="ERROR")
         return {
             "is_story": False,
             "reason": f"Error during validation: {str(e)}",
@@ -602,7 +607,7 @@ def extract_characters(text: str, openai_client: openai.Client, model: str) -> D
 
         return result
     except Exception as e:
-        print(f"Error extracting characters: {e}")
+        logger.log(f"Error extracting characters: {e}", level="ERROR")
         return {}
 
 
@@ -697,7 +702,7 @@ def generate_scenes(text: str, num_scenes: int, characters: Dict[str, Dict[str, 
 
         return scenes_list
     except Exception as e:
-        print(f"Error generating scenes: {e}")
+        logger.log(f"Error generating scenes: {e}", level="ERROR")
         return []
 
 
