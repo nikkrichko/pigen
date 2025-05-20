@@ -4,7 +4,9 @@ import requests
 from openai import OpenAI
 from icecream import ic
 import datetime
-from pprint import pprint as pp
+from support.logger import Logger
+
+logger = Logger()
 
 client = OpenAI()
 
@@ -20,7 +22,7 @@ if not os.path.exists(full_folder_path):
 
 def generate_image(picture_prompt):
     global response
-    print("\tGenerating image ...")
+    logger.info("\tGenerating image ...")
     response = client.images.generate(
         model="dall-e-3",
         prompt=picture_prompt,
@@ -35,7 +37,7 @@ def generate_image(picture_prompt):
 
 
 def save_picture(file_name, picture):
-    print("\t\tsaving image ...")
+    logger.info("\t\tsaving image ...")
     file = open(file_name, "wb")
     file.write(picture)
     file.close()
@@ -66,14 +68,14 @@ picture_prompt = picture_prompt + "\nstyle:" + style_description + "\ncolors:" +
 
 def gen_variants(picture_prompt, file_name, folder_name, num_of_pictures=1):
     for style_name, style_info in styles_map.items():
-        print("Style Name:", style_name)
+        logger.info("Style Name: %s", style_name)
         style_description = style_info["description"]
         style_palette = style_info["palette"]
         # add cartoon_style and cartoon_palette to prompt
         picture_prompt = picture_prompt + "\nstyle:" + style_description + "\ncolors:" + style_palette
 
         for item in range(1, num_of_pictures+1):
-            print("Iteration ", item, " of ", style_name, " style")
+            logger.info("Iteration %s of %s style", item, style_name)
             try:
                 # Code that may raise an exception
                 # get file name with time stamp
@@ -85,7 +87,7 @@ def gen_variants(picture_prompt, file_name, folder_name, num_of_pictures=1):
                 save_picture(file_name_with_path, picture)
             except Exception as e:
                 # Handle the exception if it occurs
-                pp(f"style:{style_name} \nAn error occurred for item {item}: {e}")
+                logger.error("style:%s \nAn error occurred for item %s: %s", style_name, item, e)
                 # Continue with the next iteration of the loop
                 continue
 
@@ -103,7 +105,7 @@ def generate_pic_in_style(num_of_pictures, picture_prompt, file_name, folder_nam
         file_name_with_path = folder_name + "/" + file_name + "_" + collapsed_time + ".png"
 
     for i in range(1, num_of_pictures+1):
-        print("Iteration ", i, " / ", num_of_pictures)
+        logger.info("Iteration %s / %s", i, num_of_pictures)
         # get file name with time stamp
         # file_name_with_path = folder_name + "/" + style_name_collapsed + "_" + file_name + "_" + collapsed_time + ".png"
 
@@ -117,13 +119,13 @@ def generate_pic_in_style(num_of_pictures, picture_prompt, file_name, folder_nam
 
 # measure timeof execution
 start_time = datetime.datetime.now()
-print("Start execution iteration at >>>>>>>>>>>>>>>>>", start_time)
+logger.info("Start execution iteration at >>>>>>>>>>>>>>>>> %s", start_time)
 # gen_variants(picture_prompt, file_name, folder_name)
 
 generate_pic_in_style(amount_of_pictures, picture_prompt, file_name, full_folder_path, style_name = None)
 # generate_pic_in_style(amount_of_pictures, picture_prompt, file_name, full_folder_path, style_name = style_name)
 finish_time = datetime.datetime.now()
-print("Start time: ", start_time)
-print("Finish time: ", finish_time)
-print("Total time: ", finish_time - start_time)
-print("Done! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+logger.info("Start time: %s", start_time)
+logger.info("Finish time: %s", finish_time)
+logger.info("Total time: %s", finish_time - start_time)
+logger.info("Done! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")

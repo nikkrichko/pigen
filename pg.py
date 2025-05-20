@@ -13,6 +13,8 @@ import support.logger as logger
 import support.Configurator as Config
 from support.logger import Logger, delog
 
+logger = Logger()
+
 
 openAIClient = OpenAI()
 
@@ -70,7 +72,7 @@ def idea(prompt, outputfile, inputfile):
         with open(inputfile, 'r') as file:
             text_prompt = file.read().strip()
 
-    print("\tGenerating prompt based on idea ...")
+    logger.log("\tGenerating prompt based on idea ...")
 
     result = sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
     sf.log_prompt_output("idea", text_prompt, result)
@@ -95,17 +97,17 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
         raise Exception("You can't specify both random_num and list_of_styles. Please specify only one of them.")
 
     if random_num != 0:
-        print(f"Generating num of random styles: {random_num}")
+        logger.log(f"Generating num of random styles: {random_num}")
         list_of_styles = sf.get_random_styles_from_file(random_num)
     else:
         list_of_styles = style.split(",")
 
-    print(f"List of styles: {list_of_styles}")
+    logger.log(f"List of styles: {list_of_styles}")
 
     # Define a function to perform task in parallel
     initial_idea_prompt = input_file.read()
     def task_gen_adopted_prompt(initial_idea_prompt, style,output_file):
-        print(f"Processing style: {style}")
+        logger.log(f"Processing style: {style}")
         additional_user_prompt = ""
         adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
         output_adopted_prompt_file = "temp/multi/03_adopted_prompt.txt"

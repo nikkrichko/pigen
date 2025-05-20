@@ -112,7 +112,11 @@ def execution_time_decorator(func):
         result = func(*args, **kwargs)
         end_time = time.time()
         execution_time = end_time - start_time
-        print(f"\t\tExecution time for '{func.__name__}': {execution_time:.2f} seconds")
+        logging.info(
+            "\t\tExecution time for '%s': %.2f seconds",
+            func.__name__,
+            execution_time,
+        )
         return result
 
     return wrapper

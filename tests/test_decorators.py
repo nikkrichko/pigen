@@ -60,22 +60,20 @@ class DecoratorTests(unittest.TestCase):
              mock.patch.object(decorators.sys, 'stdout'):
             self.assertEqual(sample(1), 2)
 
-    def test_execution_time_decorator_prints(self):
-        from io import StringIO
-        from contextlib import redirect_stdout
-
+    def test_execution_time_decorator_logs(self):
         with mock.patch.object(decorators.time, 'time', side_effect=[0, 1]):
-            buf = StringIO()
-            with redirect_stdout(buf):
+            with mock.patch.object(decorators.logging, 'info') as mock_log:
                 @decorators.execution_time_decorator
                 def func():
                     return 'ok'
 
                 self.assertEqual(func(), 'ok')
 
-            output = buf.getvalue()
-
-        self.assertIn("Execution time for 'func': 1.00 seconds", output)
+                mock_log.assert_called_with(
+                    "\t\tExecution time for '%s': %.2f seconds",
+                    'func',
+                    1.0,
+                )
 
     def test_log_function_info_and_debug(self):
         class DummyLogger:
