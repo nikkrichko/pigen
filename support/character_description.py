@@ -136,7 +136,7 @@ class CharacterAppearance:
             self.logger.log(error_msg)
             return {"error": error_msg}
 
-    @delog()
+    @delog("INFO")
     def generate_appearance(self, character_name: str) -> Dict[str, Any]:
         """
         Generate a character appearance description.
