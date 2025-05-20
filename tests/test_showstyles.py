@@ -55,6 +55,7 @@ yaml_stub = types.ModuleType('yaml')
 yaml_stub.safe_load = lambda *a, **k: {}
 sys.modules['yaml'] = yaml_stub
 
+os.environ['OPENAI_API_KEY'] = 'test'
 import pg
 
 class ShowStylesTests(unittest.TestCase):

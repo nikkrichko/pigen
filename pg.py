@@ -20,6 +20,8 @@ import json
 import support.logger as logger
 import support.Configurator as Config
 from support.logger import Logger, delog
+from support.preflight import preflight_check
+
 
 logger = Logger()
 
@@ -324,6 +326,7 @@ def ill_story(input_file, output_file, num_scenes, charfile):
 
 
 if __name__ == '__main__':
+    preflight_check()
     config = Config.Config()
     model_to_chat = config.get("MAIN_MODEL")
     model_to_image = config.get("ART_MODEL")
