@@ -20,8 +20,12 @@ import json
 import support.logger as logger
 import support.Configurator as Config
 from support.logger import Logger, delog
+from support.preflight import preflight_check
+
 
 logger = Logger()
+# Ensure environment is ready before continuing
+preflight_check()
 
 
 openAIClient = OpenAI()

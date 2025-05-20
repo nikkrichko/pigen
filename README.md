@@ -27,6 +27,17 @@ styles.
      ```
 3. Set your `OPENAI_API_KEY` environment variable. In a Unix shell use
    `export OPENAI_API_KEY=<your-key>`.
+4. (Optional) Run the preflight check to verify your installation:
+   - **Linux/macOS**
+     ```bash
+     ./scripts/preflight.sh
+     ```
+   - **Windows**
+     ```powershell
+     powershell -ExecutionPolicy Bypass -File scripts/preflight.ps1
+     ```
+   The check runs automatically whenever `pg.py` starts but the scripts allow
+   you to test your setup manually.
 
 ## Quick Usage
 

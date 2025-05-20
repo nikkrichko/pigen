@@ -24,6 +24,21 @@ powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
 
 A `venv` directory is created and all requirements are installed.
 
+## Preflight Check
+
+Run the preflight script to verify that dependencies and environment variables
+are correctly configured.
+
+- **Linux/macOS**
+  ```bash
+  ./scripts/preflight.sh
+  ```
+- **Windows**
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File scripts/preflight.ps1
+  ```
+This step is optional because `pg.py` executes the same validation on startup.
+
 ## Running the Tests
 
 After installation you can run the offline test suite.
