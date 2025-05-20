@@ -66,7 +66,7 @@ class CharactersCliTests(unittest.TestCase):
             with open(input_path, 'w', encoding='utf-8') as fh:
                 fh.write('Once upon a time')
             sample = {'Hero': {'info': 'x'}}
-            with mock.patch('support.functions.extract_characters', return_value=sample):
+            with mock.patch('support.story_utils.extract_characters', return_value=sample):
                 pg.model_to_chat = 'test-model'
                 result = runner.invoke(pg.cli, ['characters', '-i', input_path, '-o', output_path])
             self.assertEqual(result.exit_code, 0)

@@ -1,7 +1,15 @@
 import click
 from openai import OpenAI
+# Third-party
 from icecream import ic
-import support.functions as sf
+
+# Project modules
+from support import (
+    style_utils as style,
+    image_utils as image,
+    file_utils as file,
+    story_utils as story,
+)
 # Decorators used across CLI commands
 from support.decorators import spinner_decorator, execution_time_decorator
 # from support.functions import generate_image, save_picture, get_dalle_prompt_based_on_input, execution_time_decorator, save_text_to_file
@@ -74,8 +82,8 @@ def idea(prompt, outputfile, inputfile):
 
     logger.log("\tGenerating prompt based on idea ...")
 
-    result = sf.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
-    sf.log_prompt_output("idea", text_prompt, result)
+    result = style.generate_and_save_idea(text_prompt, outputfile, openAIClient, model_to_chat)
+    file.log_prompt_output("idea", text_prompt, result)
     click.echo(f'Idea generated and saved to {outputfile}.')
 
 
@@ -98,7 +106,7 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
 
     if random_num != 0:
         logger.log(f"Generating num of random styles: {random_num}")
-        list_of_styles = sf.get_random_styles_from_file(random_num)
+        list_of_styles = style.get_random_styles_from_file(random_num)
     else:
         list_of_styles = style.split(",")
 
@@ -109,17 +117,17 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
     def task_gen_adopted_prompt(initial_idea_prompt, style,output_file):
         logger.log(f"Processing style: {style}")
         additional_user_prompt = ""
-        adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
+        adopted_prompt = style.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
         output_adopted_prompt_file = "temp/multi/03_adopted_prompt.txt"
-        output_file_path = sf.replace_last_path_part_with_datetime(output_adopted_prompt_file, style)
-        sf.save_text_to_file(adopted_prompt, output_file_path)
-        image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
+        output_file_path = file.replace_last_path_part_with_datetime(output_adopted_prompt_file, style)
+        file.save_text_to_file(adopted_prompt, output_file_path)
+        image_bytes = image.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
         if output_file:
-            output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+            output_file = file.replace_last_path_part_with_datetime(output_file, style)
         else:
-            output_file = sf.default_output_file(style)
-        sf.save_picture(output_file, image)
-        sf.log_prompt_output("multistyle", adopted_prompt, output_file)
+            output_file = file.default_output_file(style)
+        image.save_picture(output_file, image_bytes)
+        file.log_prompt_output("multistyle", adopted_prompt, output_file)
 
         return adopted_prompt
 
@@ -155,15 +163,15 @@ def picByStyle(input_file, prompt, style, output_file):
     """
     initial_idea_prompt = input_file.read()
     additional_user_prompt = prompt
-    adopted_prompt = sf.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
+    adopted_prompt = style.generate_adopted_prompt(additional_user_prompt, initial_idea_prompt, style, openAIClient, model_to_chat)
 
-    image = sf.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
+    image_bytes = image.generate_image(adopted_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
     if output_file:
-        output_file = sf.replace_last_path_part_with_datetime(output_file, style)
+        output_file = file.replace_last_path_part_with_datetime(output_file, style)
     else:
-        output_file = sf.default_output_file(style)
-    sf.save_picture(output_file, image)
-    sf.log_prompt_output("picbystyle", adopted_prompt, output_file)
+        output_file = file.default_output_file(style)
+    image.save_picture(output_file, image_bytes)
+    file.log_prompt_output("picbystyle", adopted_prompt, output_file)
     click.echo(f'Picture generated with style "{style}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
 
@@ -174,12 +182,12 @@ def picByStyle(input_file, prompt, style, output_file):
 @click.option('-o', '--output_file', type=str, help='Where to save picture')
 def picFromPromptFile(input_file, output_file):
     initial_idea_prompt = input_file.read()
-    image = sf.generate_image(initial_idea_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
+    image_bytes = image.generate_image(initial_idea_prompt, openAIClient, size=PIC_SIZE, quality=PIC_QUALITY)
     if output_file:
-        output_file = sf.replace_last_path_part_with_datetime(output_file, "")
+        output_file = file.replace_last_path_part_with_datetime(output_file, "")
     else:
-        output_file = sf.default_output_file("")
-    sf.save_picture(output_file, image)
+        output_file = file.default_output_file("")
+    image.save_picture(output_file, image_bytes)
     click.echo(f'Picture generated from file "{input_file}" based on the input prompt and saved:\n---\n{output_file}')
     ic(f"Picture saved to {output_file}")
 
@@ -192,7 +200,7 @@ def picFromPromptFile(input_file, output_file):
 def addstyle(name, description, palette):
     """Add a new style entry to the styles file."""
     try:
-        sf.add_style_to_file(name, description, palette)
+        style.add_style_to_file(name, description, palette)
     except ValueError as exc:
         raise click.ClickException(str(exc))
     click.echo(f'Style "{name}" added to styles file.')
@@ -206,7 +214,7 @@ def addstyle(name, description, palette):
               help='Display palette information.')
 def showstyles(show_desc, show_palette):
     """Print available styles."""
-    styles = sf.load_styles()
+    styles = style.load_styles()
     for name, info in styles.items():
         click.echo(f'Style: {name}')
         if show_desc:
@@ -228,12 +236,12 @@ def characters_cmd(input_file, output_file):
     """Extract characters from a story and save them to JSON."""
     story_text = input_file.read()
     click.echo(f"Extracting characters from {input_file.name}...")
-    characters = sf.extract_characters(story_text, openAIClient, model_to_chat)
+    characters = story.extract_characters(story_text, openAIClient, model_to_chat)
     if not output_file.lower().endswith('.json'):
         output_file += '.json'
     with open(output_file, 'w', encoding='utf-8') as fh:
         json.dump(characters, fh, indent=2, ensure_ascii=False)
-    sf.log_prompt_output('characters', story_text[:500] + '...' if len(story_text) > 500 else story_text, output_file)
+    file.log_prompt_output('characters', story_text[:500] + '...' if len(story_text) > 500 else story_text, output_file)
     click.echo(f"Characters saved to: {output_file}")
 
 
@@ -297,7 +305,7 @@ def ill_story(input_file, output_file, num_scenes, charfile):
         output_file += '.json'
 
     # Call the illustrate_story function
-    result_file = sf.illustrate_story(
+    result_file = story.illustrate_story(
         story_text=story_text,
         output_file=output_file,
         num_scenes=num_scenes,
@@ -310,7 +318,7 @@ def ill_story(input_file, output_file, num_scenes, charfile):
     if result_file:
         click.echo(f"Story illustration completed successfully!")
         click.echo(f"Output saved to: {result_file}")
-        sf.log_prompt_output("ill_story", story_text[:500] + "..." if len(story_text) > 500 else story_text, result_file)
+        file.log_prompt_output("ill_story", story_text[:500] + "..." if len(story_text) > 500 else story_text, result_file)
     else:
         click.echo("Failed to illustrate the story. Check the logs for details.")
 
