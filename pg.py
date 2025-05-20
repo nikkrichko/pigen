@@ -40,7 +40,7 @@ def cli():
     """CLI Application for Various Tasks"""
     pass
 
-@delog("INFO")
+@delog()
 @execution_time_decorator
 @spinner_decorator
 @cli.command()
@@ -79,7 +79,7 @@ def idea(prompt, outputfile, inputfile):
 
 
 
-@delog("INFO")
+@delog()
 @execution_time_decorator
 @spinner_decorator
 @cli.command()
@@ -127,7 +127,7 @@ def multistyle(input_file, style, output_file, workers_num, random_num):
 
     pass
 
-@delog("INFO")
+@delog()
 @execution_time_decorator
 @spinner_decorator
 @cli.command()
@@ -166,7 +166,7 @@ def picByStyle(input_file, prompt, style, output_file):
     ic(f"Picture saved to {output_file}")
 
 
-@delog("INFO")
+@delog()
 @cli.command()
 @click.option('-i', '--input_file', type=click.File('r'),  help='Input file with prompt text.')
 @click.option('-o', '--output_file', type=str, help='Where to save picture')
@@ -182,7 +182,7 @@ def picFromPromptFile(input_file, output_file):
     ic(f"Picture saved to {output_file}")
 
 
-@delog("INFO")
+@delog()
 @cli.command()
 @click.option('-n', '--name', required=True, help='Style title')
 @click.option('-d', '--description', required=True, help='Style description')
@@ -196,7 +196,7 @@ def addstyle(name, description, palette):
     click.echo(f'Style "{name}" added to styles file.')
 
 
-@delog("INFO")
+@delog()
 @cli.command()
 @click.option('-d', '--description', 'show_desc', is_flag=True,
               help='Display style descriptions.')
@@ -214,7 +214,7 @@ def showstyles(show_desc, show_palette):
         click.echo('')
 
 
-@delog("INFO")
+@delog()
 @execution_time_decorator
 @spinner_decorator
 @cli.command()
