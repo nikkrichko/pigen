@@ -2,6 +2,18 @@
 
 This document provides additional instructions for developers working on `pigen`. It explains how to configure logging, run the CLI commands, prepare test data and execute the unit tests for each command.
 
+## Environment Setup
+
+Create a virtual environment and install the project requirements using the helper scripts:
+
+```bash
+./scripts/install_linux.sh      # Linux/macOS
+# or
+powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
+```
+
+The scripts install all dependencies listed in `requirements.txt`, including the optional OpenTelemetry packages used for tracing.
+
 ## Configuring the Log Level
 
 Logging behaviour is controlled through `config.yaml`. Set the `LOG_LEVEL` key to the desired verbosity, for example:
@@ -11,6 +23,10 @@ LOG_LEVEL: "DEBUG"
 ```
 
 Valid values are the standard Python log levels (`DEBUG`, `INFO`, `WARNING`, etc.). The `Logger` class in `support/logger.py` reads this value on startup.
+
+If you set `ENABLE_OPENTELEMETRY: true` in `config.yaml` the logger will send
+trace data using the OTLP protocol. Configure the `OTEL_SERVICE_NAME` and
+`OTEL_EXPORTER_OTLP_ENDPOINT` keys to match your collector.
 
 ## Running CLI Commands
 

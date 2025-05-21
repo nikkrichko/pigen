@@ -122,6 +122,9 @@ Adjust these values to suit your requirements. Each option has the following mea
 - **PIC_SIZE** – output resolution. Valid values include `1024x1024`, `1024x1792` and `1792x1024`.
 - **PIC_QUALITY** – either `Standard` or `hd` to request higher fidelity images.
 - **LOG_LEVEL** – controls the verbosity of the application's logging.
+- **ENABLE_OPENTELEMETRY** – when set to `true` traces are exported via OTLP.
+- **OTEL_SERVICE_NAME** – name of the service reported to OpenTelemetry.
+- **OTEL_EXPORTER_OTLP_ENDPOINT** – URL of the collector receiving traces.
 
 The available art styles are listed in `support/styles.json`. Each style
 contains a description and a color palette. When specifying the `--style`
