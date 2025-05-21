@@ -142,8 +142,6 @@ More details can be found in [docs/tests/USAGE.md](docs/tests/USAGE.md).
 ## Contributing
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to submit patches and feature requests.
 
-## License
-This project is licensed under the [MIT License](LICENSE).
 
 ## Documentation
 | File | Description |
@@ -154,3 +152,9 @@ This project is licensed under the [MIT License](LICENSE).
 | [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) | Details on configuration, logging and test execution |
 | [docs/tests/USAGE.md](docs/tests/USAGE.md) | Instructions for running the unit tests directly |
 
+For instructions on configuring logging, running the CLI and executing
+individual tests see
+[docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+
+## License
+This project is licensed under the Apache License 2.0. See [licenc.md](licenc.md) for an overview.
