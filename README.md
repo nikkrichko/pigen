@@ -145,3 +145,7 @@ remove a sample style entry.
 For instructions on configuring logging, running the CLI and executing
 individual tests see
 [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+
+## License
+This project is licensed under the Apache License 2.0. See [licenc.md](licenc.md) for an overview.
+
