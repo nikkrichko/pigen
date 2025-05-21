@@ -13,6 +13,8 @@ Run the shell script from the repository root:
 ```
 
 This creates a `venv` folder and installs the dependencies inside it.
+The requirements file includes optional OpenTelemetry packages that enable
+tracing support when configured.
 
 ## Windows
 
@@ -23,6 +25,7 @@ powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
 ```
 
 A `venv` directory is created and all requirements are installed.
+Like the Linux script, it also installs the optional OpenTelemetry packages.
 
 ## Preflight Check
 

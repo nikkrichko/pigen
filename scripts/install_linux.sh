@@ -23,6 +23,6 @@ fi
 source venv/bin/activate
 
 echo "[pigen] Installing dependencies from requirements.txt..."
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 
 echo "[pigen] Environment setup complete."

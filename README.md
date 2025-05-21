@@ -23,8 +23,10 @@ styles.
      ```
    - **Windows**
      ```powershell
-     powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
-     ```
+    powershell -ExecutionPolicy Bypass -File scripts/install_windows.ps1
+    ```
+   The scripts install all requirements, including the optional OpenTelemetry
+   packages used for tracing support.
 3. Set your `OPENAI_API_KEY` environment variable. In a Unix shell use
    `export OPENAI_API_KEY=<your-key>`.
 4. (Optional) Run the preflight check to verify your installation:
@@ -99,6 +101,9 @@ Runtime options are stored in `config.yaml`. Key settings include:
 - `PIC_SIZE` – Desired output size such as `1024x1024` or `1792x1024`.
 - `PIC_QUALITY` – Set to `Standard` or `hd` for higher fidelity pictures.
 - `LOG_LEVEL` – Console log verbosity.
+- `ENABLE_OPENTELEMETRY` – Enable OpenTelemetry tracing when `true`.
+- `OTEL_SERVICE_NAME` – Service name used for OpenTelemetry spans.
+- `OTEL_EXPORTER_OTLP_ENDPOINT` – Destination OTLP endpoint for traces.
 
 Adjust these values to fit your workflow and API quota.
 

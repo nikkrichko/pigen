@@ -20,6 +20,6 @@ if (-Not (Test-Path 'venv')) {
 & .\venv\Scripts\Activate.ps1
 
 Write-Output "[pigen] Installing dependencies from requirements.txt..."
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 
 Write-Output "[pigen] Environment setup complete."
